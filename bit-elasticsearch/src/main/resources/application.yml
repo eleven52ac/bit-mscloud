@@ -1,8 +1,17 @@
 server:
   port: 19912
+
 spring:
   application:
-    name: spring-cloud-es
+    name: ms-elasticsearch
+
+  cloud:
+    # Nacos配置
+    nacos:
+      discovery:
+        server-addr: 100.97.223.54:8848
+        namespace: public
+        group: DEFAULT_GROUP
 
 
   datasource:

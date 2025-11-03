@@ -14,6 +14,16 @@
     <name>elasticsearch</name>
 
     <dependencies>
+        <!-- Nacos Service Discovery -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- Spring Cloud Bootstrap -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
         <!-- Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
