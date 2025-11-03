@@ -1,0 +1,270 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- 项目信息 -->
+    <groupId>bit</groupId>
+    <artifactId>bit-mscloud</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <!-- 子模块管理 -->
+    <modules>
+        <module>bit-elasticsearch</module>
+        <module>bit-common</module>
+        <module>bit-gateway-service</module>
+    </modules>
+    <!-- 统一管理jar包版本 -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot-starter-web.version>3.3.2</spring-boot-starter-web.version>
+        <spring-boot-starter-test.version>3.3.2</spring-boot-starter-test.version>
+        <mysql.version>8.0.33</mysql.version>
+        <lombok.version>1.18.36</lombok.version>
+        <java.version>21</java.version>
+        <mybatis-plus-spring-boot3-starter>3.5.9</mybatis-plus-spring-boot3-starter>
+        <spring-cloud-dependencies>2023.0.2</spring-cloud-dependencies>
+        <spring-cloud-starter-alibaba-nacos-discovery-version>2023.0.1.2</spring-cloud-starter-alibaba-nacos-discovery-version>
+        <spring-cloud-starter-gateway>4.1.5</spring-cloud-starter-gateway>
+        <spring-cloud-starter-bootstrap>4.0.0</spring-cloud-starter-bootstrap>
+        <spring-cloud-alibaba-dependencies>2023.0.1.2</spring-cloud-alibaba-dependencies>
+        <jackson-bom>2.15.2</jackson-bom>
+        <spring-cloud-starter-loadbalancer>4.1.4</spring-cloud-starter-loadbalancer>
+        <itext7-core>7.1.12</itext7-core>
+        <tika>2.5.0</tika>
+        <langdetect>1.1-20120112</langdetect>
+        <java-jwt>4.4.0</java-jwt>
+        <jbcrypt>0.4</jbcrypt>
+        <spring-boot-starter-amqp>3.3.2</spring-boot-starter-amqp>
+        <jackson-databind>2.18.2</jackson-databind>
+        <elasticsearch-rest-high-level-client>7.16.2</elasticsearch-rest-high-level-client>
+        <fastjson2>2.0.53</fastjson2>
+        <dynamic-datasource-spring-boot3-starter>4.3.0</dynamic-datasource-spring-boot3-starter>
+        <guava.version>33.4.8-jre</guava.version>
+        <commons-lang3.version>3.19.0</commons-lang3.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-io.version>2.20.0</commons-io.version>
+        <slf4j.version>2.0.16</slf4j.version>
+    </properties>
+    <!-- 版本管理 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- 统一 SLF4J 版本（适配 Spring Boot 3.x） -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <!-- Spring Boot Web -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot-starter-web.version}</version>
+            </dependency>
+            <!-- MySQL -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- Spring Boot Test -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot-starter-test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- MyBatis-Plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus-spring-boot3-starter}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- DynamicDataSource -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+                <version>${dynamic-datasource-spring-boot3-starter}</version>
+            </dependency>
+            <!-- SpringCloud依赖-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-dependencies}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Nacos -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${spring-cloud-starter-alibaba-nacos-discovery-version}</version>
+            </dependency>
+            <!-- SpringCloud Bootstrap -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bootstrap</artifactId>
+                <version>${spring-cloud-starter-bootstrap}</version>
+            </dependency>
+            <!-- Alibaba Cloud -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba-dependencies}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson-bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- SpringCloud LoadBalancer -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                <version>${spring-cloud-starter-loadbalancer}</version>
+            </dependency>
+            <!-- itext7 -->
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itext7-core</artifactId>
+                <version>${itext7-core}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>kernel</artifactId>
+                <version>${itext7-core}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>io</artifactId>
+                <version>${itext7-core}</version>
+            </dependency>
+            <!-- Tika -->
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-core</artifactId>
+                <version>${tika}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-parsers</artifactId>
+                <version>${tika}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.cybozu.labs</groupId>
+                <artifactId>langdetect</artifactId>
+                <version>${langdetect}</version>
+            </dependency>
+            <!-- SpringCloud Gateway -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${spring-cloud-starter-gateway}</version>
+                <exclusions>
+                    <!-- 排除 Spring Boot Web 启动器 -->
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-web</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- JWT -->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${java-jwt}</version>
+            </dependency>
+            <!-- BCrypt -->
+            <dependency>
+                <groupId>org.mindrot</groupId>
+                <artifactId>jbcrypt</artifactId>
+                <version>${jbcrypt}</version>
+            </dependency>
+            <!-- RabbitMQ -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-amqp</artifactId>
+                <version>${spring-boot-starter-amqp}</version>
+            </dependency>
+            <!-- Elasticsearch -->
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elasticsearch-rest-high-level-client}</version>
+            </dependency>
+            <!-- Fastjson -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2}</version>
+            </dependency>
+            <!-- guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+            </dependency>
+            <!-- commons-lang3 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+            </dependency>
+            <!-- commons-collections4 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+            </dependency>
+            <!-- commons-io -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <!-- 构建和编译插件配置 -->
+    <build>
+        <plugins>
+            <!-- Maven 编译插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <!-- Spring Boot 插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.3.5</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

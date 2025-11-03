@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mselasticsearch.mapper.MsHouseInfoMapper">
+
+    <resultMap id="BaseResultMap" type="mselasticsearch.domain.MsHouseInfo">
+            <id property="houseId" column="house_id" />
+            <result property="houseCode" column="house_code" />
+            <result property="houseUnitcode" column="house_unitcode" />
+            <result property="located" column="located" />
+            <result property="projectCode" column="project_code" />
+            <result property="projectName" column="project_name" />
+            <result property="houseQuality" column="house_quality" />
+            <result property="protectedType" column="protected_type" />
+            <result property="houseType" column="house_type" />
+            <result property="city" column="city" />
+            <result property="counties" column="counties" />
+            <result property="houseManage" column="house_manage" />
+            <result property="area" column="area" />
+            <result property="inArea" column="in_area" />
+            <result property="outArea" column="out_area" />
+            <result property="useArea" column="use_area" />
+            <result property="buildingsNum" column="buildings_num" />
+            <result property="floorNumber" column="floor_number" />
+            <result property="unitNum" column="unit_num" />
+            <result property="allFloorNum" column="all_floor_num" />
+            <result property="houseNum" column="house_num" />
+            <result property="carroomArea" column="carroom_area" />
+            <result property="atticArea" column="attic_area" />
+            <result property="storeroomArea" column="storeroom_area" />
+            <result property="dataSource" column="data_source" />
+            <result property="dataTime" column="data_time" />
+            <result property="isValid" column="is_valid" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        house_id,house_code,house_unitcode,located,project_code,project_name,
+        house_quality,protected_type,house_type,city,counties,
+        house_manage,area,in_area,out_area,use_area,
+        buildings_num,floor_number,unit_num,all_floor_num,house_num,
+        carroom_area,attic_area,storeroom_area,data_source,data_time,
+        is_valid
+    </sql>
+</mapper>
