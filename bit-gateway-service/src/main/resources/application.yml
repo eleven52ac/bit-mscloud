@@ -31,6 +31,11 @@ spring:
             - Path=/api/es/**
           filters:
               - StripPrefix=2   # 去掉 /api/es
+              - AddRequestHeader=X-Internal-Secret, ${gateway.secret}
+
+# 👇 自定义配置
+gateway:
+  secret: my_gateway_secret
 
 # 日志配置
 logging:
