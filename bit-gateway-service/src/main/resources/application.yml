@@ -1,25 +1,51 @@
 server:
   port: 19010
+  ssl:
+    enabled: true
+    key-store: classpath:certs/gateway-keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    trust-store: classpath:certs/ca-truststore.p12
+    trust-store-password: changeit
+    trust-store-type: PKCS12
+    client-auth: want
 
 spring:
   application:
     name: ms-gateway
 
   cloud:
-    # Nacos配置
     nacos:
       discovery:
         server-addr: 100.97.223.54:8848
         namespace: public
         group: DEFAULT_GROUP
+        secure: false # 告诉注册中心这个服务是 https 协议
 
     gateway:
-      # 启用服务发现
+      # HTTP 客户端 SSL 配置（用于 mTLS）
+      httpclient:
+        ssl:
+          use-insecure-trust-manager: false
+          handshake-timeout: 10000
+          close-notify-flush-timeout: 3000
+          close-notify-read-timeout: 0
+          trusted-x509-certificates:
+            - classpath:certs/ca-cert.pem
+          key-store: classpath:certs/gateway-keystore.p12
+          key-store-password: changeit
+          key-store-type: PKCS12
+          trust-store: classpath:certs/ca-truststore.p12
+          trust-store-password: changeit
+          trust-store-type: PKCS12
+
+      # 态服务发现路由
       discovery:
         locator:
-          enabled: true     # 开启动态路由
-          lower-case-service-id: true   # 服务名转小写（推荐）
-      # 路由配置
+          enabled: true                 # 开启动态路由
+          lower-case-service-id: true   # 服务名自动转小写（推荐）
+
+      # 静态路由配置（自定义前缀转发）
       routes:
         - id: user-service
           uri: lb://user-service
@@ -30,17 +56,19 @@ spring:
           predicates:
             - Path=/api/es/**
           filters:
-              - StripPrefix=2   # 去掉 /api/es
-              - AddRequestHeader=X-Internal-Secret, ${gateway.secret}
-
-# 👇 自定义配置
-gateway:
-  secret: my_gateway_secret
+            - StripPrefix=2
 
 # 日志配置
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
     root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 
 

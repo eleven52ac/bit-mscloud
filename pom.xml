@@ -47,6 +47,17 @@
     <!-- 版本管理 -->
     <dependencyManagement>
         <dependencies>
+            <!-- Spring Security 资源服务器 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            </dependency>
+
+            <!-- JWT 支持 -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-jose</artifactId>
+            </dependency>
             <!-- 统一 SLF4J 版本（适配 Spring Boot 3.x） -->
             <dependency>
                 <groupId>org.slf4j</groupId>
