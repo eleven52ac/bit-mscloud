@@ -1,26 +1,17 @@
-
-PASSWORD="changeit"
-CA_NAME="BitMSCloudCA"
-SERVER_CN="192.168.31.57"
-CLIENT_CN="gateway"
-
-echo "🧹 清理旧文件..."
 rm -f *.pem *.p12 *.csr *.srl *.cnf
 
-# === 1️⃣ 生成 CA 根证书 ===
-echo "📜 生成 CA 根证书..."
+echo "🔹 生成 CA 根证书..."
 openssl genrsa -out ca-key.pem 4096
 openssl req -x509 -new -nodes \
   -key ca-key.pem \
   -sha256 -days 3650 \
   -out ca-cert.pem \
-  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=CA/CN=$CA_NAME"
+  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=CA/CN=BitMSCloudCA"
 
-# === 2️⃣ 生成服务端证书 (Elasticsearch 等) ===
-echo "💡 生成服务端证书..."
+echo "🔹 生成服务端私钥和证书请求..."
 openssl genrsa -out server-key.pem 2048
 openssl req -new -key server-key.pem -out server.csr \
-  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=Server/CN=$SERVER_CN"
+  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=Server/CN=bg-mac-mini.tailfbfced.ts.net"
 
 cat > server-ext.cnf <<EOF
 authorityKeyIdentifier=keyid,issuer
@@ -34,17 +25,30 @@ IP.1 = 192.168.31.57
 IP.2 = 100.120.86.63
 IP.3 = 100.97.223.54
 DNS.1 = localhost
+DNS.2 = bg-mac-mini.tailfbfced.ts.net
+DNS.3 = vm-16-2-ubuntu.tailfbfced.ts.net
+DNS.4 = bg-camellia.tailfbfced.ts.net
 EOF
 
+echo "🔹 签发服务端证书..."
 openssl x509 -req -in server.csr \
   -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial \
   -out server-cert.pem -days 1095 -sha256 -extfile server-ext.cnf
 
-# === 3️⃣ 生成客户端 (Gateway) 证书 ===
-echo "🛰️ 生成客户端 (Gateway) 证书..."
+echo "🔹 导出服务端 keystore..."
+openssl pkcs12 -export \
+  -in server-cert.pem \
+  -inkey server-key.pem \
+  -out server-keystore.p12 \
+  -name "server" \
+  -CAfile ca-cert.pem \
+  -caname "bitmscloudca" \
+  -password pass:changeit
+
+echo "🔹 生成客户端 (gateway) 私钥和 CSR..."
 openssl genrsa -out gateway-key.pem 2048
 openssl req -new -key gateway-key.pem -out gateway.csr \
-  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=Gateway/CN=$CLIENT_CN"
+  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=Gateway/CN=gateway"
 
 cat > gateway-ext.cnf <<EOF
 authorityKeyIdentifier=keyid,issuer
@@ -53,47 +57,29 @@ keyUsage = digitalSignature, keyEncipherment
 extendedKeyUsage = clientAuth
 EOF
 
+echo "🔹 签发客户端证书..."
 openssl x509 -req -in gateway.csr \
   -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial \
   -out gateway-cert.pem -days 1095 -sha256 -extfile gateway-ext.cnf
 
-# === 4️⃣ 生成 keystore / truststore ===
-echo "🔐 生成 keystore / truststore..."
-
-# 服务端 keystore
-openssl pkcs12 -export \
-  -in server-cert.pem \
-  -inkey server-key.pem \
-  -out server-keystore.p12 \
-  -name "server" \
-  -CAfile ca-cert.pem \
-  -caname "$CA_NAME" \
-  -password pass:$PASSWORD
-
-# 客户端 keystore
+echo "🔹 导出客户端 keystore..."
 openssl pkcs12 -export \
   -in gateway-cert.pem \
   -inkey gateway-key.pem \
   -out gateway-keystore.p12 \
   -name "gateway" \
   -CAfile ca-cert.pem \
-  -caname "$CA_NAME" \
-  -password pass:$PASSWORD
+  -caname "bitmscloudca" \
+  -password pass:changeit
 
-# Truststore (双方通用)
+echo "🔹 创建 truststore..."
 keytool -importcert -trustcacerts \
-  -alias "$CA_NAME" \
+  -alias bitmscloudca \
   -file ca-cert.pem \
   -keystore ca-truststore.p12 \
   -storetype PKCS12 \
-  -storepass $PASSWORD \
+  -storepass changeit \
   -noprompt
 
-echo "✅ 所有证书生成完成!"
-ls -lh *.pem *.p12
-
-# 验证
-echo ""
-echo "🔍 验证 CA 链..."
-openssl verify -CAfile ca-cert.pem server-cert.pem
-openssl verify -CAfile ca-cert.pem gateway-cert.pem
+echo "✅ 所有证书生成完毕！"
+ls -l

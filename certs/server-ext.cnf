@@ -9,3 +9,6 @@ IP.1 = 192.168.31.57
 IP.2 = 100.120.86.63
 IP.3 = 100.97.223.54
 DNS.1 = localhost
+DNS.2 = bg-mac-mini.tailfbfced.ts.net
+DNS.3 = vm-16-2-ubuntu.tailfbfced.ts.net
+DNS.4 = bg-camellia.tailfbfced.ts.net
