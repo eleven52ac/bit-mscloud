@@ -6,4 +6,6 @@ subjectAltName = @alt_names
 
 [alt_names]
 IP.1 = 192.168.31.57
+IP.2 = 100.120.86.63
+IP.3 = 100.97.223.54
 DNS.1 = localhost
