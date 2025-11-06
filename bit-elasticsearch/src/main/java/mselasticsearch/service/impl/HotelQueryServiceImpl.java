@@ -1,7 +1,7 @@
 package mselasticsearch.service.impl;
 
-import mscommon.common.ApiResponse;
-import mscommon.common.ApiUtils;
+import common.common.ApiResponse;
+import common.common.ApiUtils;
 import mselasticsearch.service.QueryDocStrategy;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;

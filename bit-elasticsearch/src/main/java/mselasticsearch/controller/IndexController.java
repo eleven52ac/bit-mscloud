@@ -1,7 +1,7 @@
 package mselasticsearch.controller;
 
-import mscommon.common.ApiResponse;
-import mscommon.common.ApiUtils;
+import common.common.ApiResponse;
+import common.common.ApiUtils;
 import mselasticsearch.Constant;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;

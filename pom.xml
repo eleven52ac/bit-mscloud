@@ -10,7 +10,15 @@
     <modules>
         <module>bit-elasticsearch</module>
         <module>bit-common</module>
-        <module>bit-gateway-service</module>
+        <module>bit-gateway</module>
+        <module>bit-api</module>
+        <module>bit-auth</module>
+        <module>bit-ai</module>
+        <module>bit-cache</module>
+        <module>bit-file</module>
+        <module>bit-job</module>
+        <module>bit-seckill</module>
+        <module>bit-other</module>
     </modules>
     <!-- 统一管理jar包版本 -->
     <properties>
@@ -47,17 +55,6 @@
     <!-- 版本管理 -->
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Security 资源服务器 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-            </dependency>
-
-            <!-- JWT 支持 -->
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-oauth2-jose</artifactId>
-            </dependency>
             <!-- 统一 SLF4J 版本（适配 Spring Boot 3.x） -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -158,16 +155,6 @@
                 <version>${itext7-core}</version>
                 <type>pom</type>
             </dependency>
-            <dependency>
-                <groupId>com.itextpdf</groupId>
-                <artifactId>kernel</artifactId>
-                <version>${itext7-core}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.itextpdf</groupId>
-                <artifactId>io</artifactId>
-                <version>${itext7-core}</version>
-            </dependency>
             <!-- Tika -->
             <dependency>
                 <groupId>org.apache.tika</groupId>
@@ -181,10 +168,21 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>com.cybozu.labs</groupId>
-                <artifactId>langdetect</artifactId>
-                <version>${langdetect}</version>
+            <groupId>com.cybozu.labs</groupId>
+            <artifactId>langdetect</artifactId>
+            <version>${langdetect}</version>
             </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>kernel</artifactId>
+                <version>${itext7-core}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>io</artifactId>
+                <version>${itext7-core}</version>
+            </dependency>
+
             <!-- SpringCloud Gateway -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

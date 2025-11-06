@@ -1,6 +1,6 @@
 package mselasticsearch.service;
 
-import mscommon.common.ApiResponse;
+import common.common.ApiResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 
 import java.util.Map;

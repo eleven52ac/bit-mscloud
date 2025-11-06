@@ -1,6 +1,6 @@
 package mselasticsearch.service.impl;
 
-import mscommon.common.ApiResponse;
+import common.common.ApiResponse;
 import mselasticsearch.service.DisposeStrategy;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.stereotype.Service;
