@@ -10,6 +10,7 @@ server:
     trust-store-type: PKCS12
     client-auth: want
 
+
 spring:
   application:
     name: ms-gateway
@@ -26,7 +27,6 @@ spring:
       # HTTP 客户端 SSL 配置（用于 mTLS）
       httpclient:
         ssl:
-          use-insecure-trust-manager: false
           handshake-timeout: 10000
           close-notify-flush-timeout: 3000
           close-notify-read-timeout: 0
@@ -38,6 +38,7 @@ spring:
           trust-store: classpath:certs/ca-truststore.p12
           trust-store-password: changeit
           trust-store-type: PKCS12
+          use-insecure-trust-manager: false
 
       # 态服务发现路由
       discovery:
@@ -63,12 +64,6 @@ logging:
   level:
     org.springframework.cloud.gateway: DEBUG
     root: INFO
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
 
 
 

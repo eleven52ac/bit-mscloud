@@ -1,5 +1,6 @@
 server:
   port: 19912
+  address: 0.0.0.0
   ssl:
     enabled: true
     key-store: classpath:certs/server-keystore.p12
@@ -8,7 +9,7 @@ server:
     trust-store: classpath:certs/ca-truststore.p12
     trust-store-password: changeit
     trust-store-type: PKCS12
-    client-auth: need   # 要求网关必须提供证书
+    client-auth: need
 
 spring:
   application:
@@ -18,6 +19,8 @@ spring:
     # Nacos配置
     nacos:
       discovery:
+        ip: bg-mac-mini.tailfbfced.ts.net
+        port: 19912
         server-addr: 100.97.223.54:8848
         namespace: public
         group: DEFAULT_GROUP
@@ -47,3 +50,8 @@ mybatis-plus:
 elasticsearch:
   host: 100.97.223.54
   port: 9200
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG

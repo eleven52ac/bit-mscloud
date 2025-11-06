@@ -1,4 +1,3 @@
-rm -f *.pem *.p12 *.csr *.srl *.cnf
 
 echo "🔹 生成 CA 根证书..."
 openssl genrsa -out ca-key.pem 4096
@@ -11,8 +10,9 @@ openssl req -x509 -new -nodes \
 echo "🔹 生成服务端私钥和证书请求..."
 openssl genrsa -out server-key.pem 2048
 openssl req -new -key server-key.pem -out server.csr \
-  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=Server/CN=bg-mac-mini.tailfbfced.ts.net"
+  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=Server/CN=service.bitms"
 
+# ✅ 添加 mac、win、wsl 各节点的 DNS 及 IP
 cat > server-ext.cnf <<EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
@@ -21,13 +21,21 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-IP.1 = 192.168.31.57
+# --- 本机回环地址 ---
+DNS.2 = localhost
+IP.1 = 127.0.0.1
+
+# --- mac 节点 ---
+DNS.3 = bg-mac-mini.tailfbfced.ts.net
 IP.2 = 100.120.86.63
-IP.3 = 100.97.223.54
-DNS.1 = localhost
-DNS.2 = bg-mac-mini.tailfbfced.ts.net
-DNS.3 = vm-16-2-ubuntu.tailfbfced.ts.net
+
+# --- Windows 节点 ---
 DNS.4 = bg-camellia.tailfbfced.ts.net
+IP.3 = 100.97.223.54
+
+# --- WSL 节点 ---
+DNS.5 = bg-windows-wsl2.tailfbfced.ts.net
+IP.4 = 100.113.43.94
 EOF
 
 echo "🔹 签发服务端证书..."
@@ -48,7 +56,7 @@ openssl pkcs12 -export \
 echo "🔹 生成客户端 (gateway) 私钥和 CSR..."
 openssl genrsa -out gateway-key.pem 2048
 openssl req -new -key gateway-key.pem -out gateway.csr \
-  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=Gateway/CN=gateway"
+  -subj "/C=CN/ST=Shanghai/L=Shanghai/O=BitMS/OU=Gateway/CN=gateway.bitms"
 
 cat > gateway-ext.cnf <<EOF
 authorityKeyIdentifier=keyid,issuer
@@ -82,4 +90,4 @@ keytool -importcert -trustcacerts \
   -noprompt
 
 echo "✅ 所有证书生成完毕！"
-ls -l
+ls -l *.pem *.p12
