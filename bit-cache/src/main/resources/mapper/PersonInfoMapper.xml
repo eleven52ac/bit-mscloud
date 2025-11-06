@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bit.cache.mapper.PersonInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.bit.cache.entity.PersonInfoEntity">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="age" column="age" />
+            <result property="birthday" column="birthday" />
+            <result property="gender" column="gender" />
+            <result property="register" column="register" />
+            <result property="idCard" column="id_card" />
+            <result property="isDelete" column="is_delete" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,age,birthday,gender,register,id_card,is_delete
+    </sql>
+</mapper>

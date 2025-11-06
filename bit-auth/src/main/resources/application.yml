@@ -1,0 +1,127 @@
+# 服务端口配置
+server:
+  port: 19200
+
+spring:
+  application:
+    name: singular-service
+
+  # 邮件服务配置
+  mail:
+    host: smtp.163.com # 邮件服务器地址
+    port: 465 # SSL 端口
+    username: camellia084@163.com # 发送邮件的邮箱
+    password: DLiL2kNcruiAtVRH # 开通服务后得到的授权码
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.enable: true
+      mail.default-encoding: utf-8 # 邮件内容的编码
+  # 多数据源配置
+  datasource:
+    dynamic:
+     # primary: mysql
+      strict: false
+      datasource:
+        # postgres 数据源配置
+        postgres:
+          url: jdbc:postgresql://100.97.223.54:5432/singular
+          username: postgres
+          password: camellia20.
+          driver-class-name: org.postgresql.Driver
+          druid:
+            initial-size: 20
+            max-active: 60
+            min-idle: 2
+            max-wait: 60000
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+        # mysql 数据源配置
+        mysql:
+          url: jdbc:mysql://100.97.223.54:3306/prhouseserver
+          username: root
+          password: camellia20.
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          druid:
+            initial-size: 20
+            max-active: 60
+            min-idle: 2
+            max-wait: 60000
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+        # oracle 数据源配置
+        oracle:
+          url: jdbc:oracle:thin:@//100.97.223.54:1521/FREEPDB1
+          username: sys as sysdba
+          password: camellia20.
+          driver-class-name: oracle.jdbc.driver.OracleDriver
+          druid:
+            initial-size: 20
+            max-active: 60
+            min-idle: 2
+            max-wait: 60000
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+        mysql2:
+          url: jdbc:mysql://100.97.223.54:3306/dev-data
+          username: root
+          password: camellia20.
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          druid:
+            initial-size: 20
+            max-active: 60
+            min-idle: 2
+            max-wait: 60000
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+        mysql3:
+          url: jdbc:mysql://100.97.223.54:3306/singular
+          username: root
+          password: camellia20.
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          druid:
+            initial-size: 20
+            max-active: 60
+            min-idle: 2
+            max-wait: 60000
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+  # Redis 配置
+  data:
+    redis:
+      host: 100.97.223.54
+      # host: 127.0.0.1
+      port: 6379
+      password: camellia20.
+      database: 2  # 使用 Redis 的数据库 2
+
+      # Lettuce 客户端配置
+      lettuce:
+        pool:
+          max-active: 100      # 最大活跃连接数
+          max-idle: 50         # 最大空闲连接数
+          min-idle: 10         # 最小空闲连接数
+          max-wait: 5000       # 最大等待时间（毫秒）
+
+
+# 阿里云短信服务配置
+alibaba:
+  signName: 白山茶
+  templateCode: SMS_474831120
+  accessKeyId: LTAI5tShgN5fSS7M9HkRSXjd
+  accessKeySecret: 2S2p4DrTNaKbBqOYWdFezYDnTe0opq
+  regionId: cn-hangzhou
+  product: Dysmsapi
+  domin: dysmsapi.aliyuncs.com
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+
+ai:
+  qwen:
+    api-key: sk-54b1779f9eb743faa8ac2a73091ce97d
+    model: qwen3-max
+
+
+elasticsearch:
+  uris: http://localhost:9200

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bit.cache.mapper.PersonsInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.bit.cache.entity.PersonsInfoEntity">
+            <id property="personId" column="person_id" />
+            <result property="familyCode" column="family_code" />
+            <result property="oldId" column="old_id" />
+            <result property="personCode" column="person_code" />
+            <result property="personRelevancy" column="person_relevancy" />
+            <result property="personName" column="person_name" />
+            <result property="personSex" column="person_sex" />
+            <result property="cardType" column="card_type" />
+            <result property="cardNumber" column="card_number" />
+            <result property="maritalStatus" column="marital_status" />
+            <result property="yearRevenue" column="year_revenue" />
+            <result property="householdType" column="household_type" />
+            <result property="householdNumber" column="household_number" />
+            <result property="accountsAddress" column="accounts_address" />
+            <result property="accountsIntime" column="accounts_intime" />
+            <result property="liveAddress" column="live_address" />
+            <result property="mobilePhone" column="mobile_phone" />
+            <result property="contactAddress" column="contact_address" />
+            <result property="zip" column="zip" />
+            <result property="personStatus" column="person_status" />
+            <result property="bank" column="bank" />
+            <result property="bankBranch" column="bank_branch" />
+            <result property="bankCard" column="bank_card" />
+            <result property="dataSource" column="data_source" />
+            <result property="dataTime" column="data_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        person_id,family_code,old_id,person_code,person_relevancy,person_name,
+        person_sex,card_type,card_number,marital_status,year_revenue,
+        household_type,household_number,accounts_address,accounts_intime,live_address,
+        mobile_phone,contact_address,zip,person_status,bank,
+        bank_branch,bank_card,data_source,data_time
+    </sql>
+</mapper>

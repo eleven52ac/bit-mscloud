@@ -1,16 +1,16 @@
-package com.bit.web.controller;
+package com.bit.auth.controller;
 
+import com.bit.auth.service.CaptchaService;
 import cn.hutool.core.util.NumberUtil;
-import com.bit.web.service.CaptchaService;
-import commons.annotation.CheckLogin;
+import common.annotation.CheckLogin;
+import common.dto.response.ApiResponse;
+import common.dto.response.ApiUtils;
+import common.utils.UserThreadLocal;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import commons.response.ApiResponse;
-import commons.response.ApiUtils;
-import commons.utils.UserThreadLocal;
 
 import java.util.concurrent.ConcurrentHashMap;
 
