@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bit.other.mapper.SnowflakeRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.bit.other.entity.SnowflakeRecord">
+            <id property="id" column="id" />
+            <result property="idBinary" column="id_binary" />
+            <result property="timestampMs" column="timestamp_ms" />
+            <result property="timestampDatetime" column="timestamp_datetime" />
+            <result property="datacenterId" column="datacenter_id" />
+            <result property="workerId" column="worker_id" />
+            <result property="sequence" column="sequence" />
+            <result property="rawBits" column="raw_bits" />
+            <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,id_binary,timestamp_ms,timestamp_datetime,datacenter_id,worker_id,
+        sequence,raw_bits,created_at
+    </sql>
+</mapper>
