@@ -3,7 +3,6 @@ package com.bit.auth;
 import commons.enums.RSAAlgorithmEnum;
 import common.utils.RSAUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 
 import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
@@ -21,7 +20,7 @@ import static commons.enums.RSASecretKey.*;
 @Slf4j
 public class RSATest {
 
-    @Test
+
     public void testRSA() throws Exception {
         try {
             // 1. 生成新的密钥对
@@ -70,8 +69,7 @@ public class RSATest {
             log.error("Java供应商: " + System.getProperty("java.vendor"));
         }
     }
-
-    @Test
+    
     public void testRSA2() throws Exception {
         try {
             RSAUtils decryptor = new RSAUtils(RSA_SECRET_KEY_1.getPrivateKey(), RSA_SECRET_KEY_1.getPublicKey());

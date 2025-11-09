@@ -1,14 +1,14 @@
 package com.bit.auth.controller;
 
-import com.bit.auth.dto.request.LoginRequest;
-import com.bit.auth.service.LoginStrategyDispatcher;
+import com.bit.auth.dispatcher.CaptchaStrategyDispatcher;
+import com.bit.auth.dispatcher.RegisterStrategyDispatcher;
+import com.bit.auth.dto.request.TokenRequest;
+import com.bit.auth.dispatcher.LoginStrategyDispatcher;
+import common.base.BaseController;
 import common.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Datetime: 2025年11月07日17:33
@@ -18,22 +18,57 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/auth/token")
-public class TokenController {
+public class TokenController extends BaseController {
 
     @Autowired
-    private LoginStrategyDispatcher  loginStrategyDispatcher;
+    private LoginStrategyDispatcher loginStrategyDispatcher;
+
+    @Autowired
+    private RegisterStrategyDispatcher registerStrategyDispatcher;
+
+    @Autowired
+    private CaptchaStrategyDispatcher captchaStrategyDispatcher;
+
 
     /**
-     *  登录
+     *
      * @Author: Eleven52AC
-     * @Description:
+     * @Description: 登录
      * @param request
      * @return
      */
     @PostMapping("/login")
-    public ApiResponse login(@RequestBody LoginRequest request) {
-        loginStrategyDispatcher.login(request);
-        return ApiResponse.success();
+    public ApiResponse<String> login(@RequestBody TokenRequest request) {
+        return loginStrategyDispatcher.login(request, getClientInfo());
     }
+
+
+    /**
+     *
+     * @Author: Eleven52AC
+     * @Description: 注册
+     * @param request
+     * @return
+     */
+    @PostMapping("/register")
+    public ApiResponse<String> register(@RequestBody TokenRequest request) {
+        return registerStrategyDispatcher.register(request, getClientInfo());
+    }
+
+
+    /**
+     *
+     * @Author: Eleven52AC
+     * @Description: 获取验证码
+     * @param  identifier
+     * @param captchaMethod
+     * @return
+     */
+    @GetMapping("/captcha")
+    public ApiResponse<String> captcha(@RequestParam(name = "identifier") String identifier,
+                                       @RequestParam(name = "captchaMethod") String captchaMethod) {
+        return captchaStrategyDispatcher.captcha(identifier, captchaMethod, getClientInfo());
+    }
+
 
 }

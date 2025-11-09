@@ -40,4 +40,16 @@ public class RegexUtils {
         }
         return !str.matches(regex);
     }
+
+    public static boolean isPasswordStrong(String password) {
+        if (password == null) {
+            return false;
+        }
+        if (password.length() < 8) {
+            return false;
+        }
+        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])\\S{8,}$";
+        return password.matches(regex);
+    }
+
 }

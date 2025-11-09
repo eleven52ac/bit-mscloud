@@ -16,7 +16,7 @@ import common.dto.response.ApiResponse;
 import common.dto.response.ApiUtils;
 import common.utils.BCryptUtil;
 import common.utils.RegexUtils;
-import commons.config.AliyunSmsConfig;
+import common.config.AliyunSmsConfig;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

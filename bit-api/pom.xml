@@ -10,10 +10,11 @@
     </parent>
     <!-- Project -->
     <artifactId>bit-api</artifactId>
-    <version>1.0.0</version>
+    <packaging>pom</packaging>
     <name>api</name>
-
-    <dependencies>
-
-    </dependencies>
+    <description>api系统接口</description>
+    <!-- Sub-modules -->
+    <modules>
+        <module>bit-api-user</module>
+    </modules>
 </project>

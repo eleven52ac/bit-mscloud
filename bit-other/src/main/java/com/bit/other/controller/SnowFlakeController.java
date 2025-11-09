@@ -2,9 +2,8 @@ package com.bit.other.controller;
 
 import com.bit.other.entity.SnowflakeRecord;
 import com.bit.other.service.SnowflakeRecordService;
-import commons.response.ApiResponse;
-import commons.response.ApiUtils;
-import commons.utils.SnowflakeIdGenerator;
+import common.dto.response.ApiResponse;
+import common.utils.SnowflakeIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,11 +68,11 @@ public class SnowFlakeController {
             }
 
             long timeSpent = System.currentTimeMillis() - startTime;
-            return ApiUtils.success("生成完毕，共 " + TOTAL + " 条，耗时：" + timeSpent + "ms");
+            return ApiResponse.success("生成完毕，共 " + TOTAL + " 条，耗时：" + timeSpent + "ms");
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return ApiUtils.error("数据生成被中断");
+            return ApiResponse.error("数据生成被中断");
         } finally {
             executor.shutdown();
         }

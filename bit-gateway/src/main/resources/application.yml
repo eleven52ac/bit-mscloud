@@ -58,6 +58,12 @@ spring:
             - Path=/api/es/**
           filters:
             - StripPrefix=2
+        - id: ms-auth
+          uri: lb://ms-auth
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=1
 
 # 日志配置
 logging:

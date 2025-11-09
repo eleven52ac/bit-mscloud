@@ -1,10 +1,31 @@
 # 服务端口配置
 server:
-  port: 19200
+  port: 19903
+  address: 0.0.0.0
+  ssl:
+    enabled: true
+    key-store: classpath:certs/server-keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    trust-store: classpath:certs/ca-truststore.p12
+    trust-store-password: changeit
+    trust-store-type: PKCS12
+    client-auth: need
 
 spring:
   application:
-    name: singular-service
+    name: ms-auth
+
+  cloud:
+    # Nacos配置
+    nacos:
+      discovery:
+        ip: 127.0.0.1
+        port: 19903
+        server-addr: 100.97.223.54:8848
+        namespace: public
+        group: DEFAULT_GROUP
+        secure: true
 
   # 邮件服务配置
   mail:
@@ -17,75 +38,7 @@ spring:
       mail.smtp.starttls.enable: true
       mail.smtp.ssl.enable: true
       mail.default-encoding: utf-8 # 邮件内容的编码
-  # 多数据源配置
-  datasource:
-    dynamic:
-     # primary: mysql
-      strict: false
-      datasource:
-        # postgres 数据源配置
-        postgres:
-          url: jdbc:postgresql://100.97.223.54:5432/singular
-          username: postgres
-          password: camellia20.
-          driver-class-name: org.postgresql.Driver
-          druid:
-            initial-size: 20
-            max-active: 60
-            min-idle: 2
-            max-wait: 60000
-            time-between-eviction-runs-millis: 60000
-            min-evictable-idle-time-millis: 300000
-        # mysql 数据源配置
-        mysql:
-          url: jdbc:mysql://100.97.223.54:3306/prhouseserver
-          username: root
-          password: camellia20.
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          druid:
-            initial-size: 20
-            max-active: 60
-            min-idle: 2
-            max-wait: 60000
-            time-between-eviction-runs-millis: 60000
-            min-evictable-idle-time-millis: 300000
-        # oracle 数据源配置
-        oracle:
-          url: jdbc:oracle:thin:@//100.97.223.54:1521/FREEPDB1
-          username: sys as sysdba
-          password: camellia20.
-          driver-class-name: oracle.jdbc.driver.OracleDriver
-          druid:
-            initial-size: 20
-            max-active: 60
-            min-idle: 2
-            max-wait: 60000
-            time-between-eviction-runs-millis: 60000
-            min-evictable-idle-time-millis: 300000
-        mysql2:
-          url: jdbc:mysql://100.97.223.54:3306/dev-data
-          username: root
-          password: camellia20.
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          druid:
-            initial-size: 20
-            max-active: 60
-            min-idle: 2
-            max-wait: 60000
-            time-between-eviction-runs-millis: 60000
-            min-evictable-idle-time-millis: 300000
-        mysql3:
-          url: jdbc:mysql://100.97.223.54:3306/singular
-          username: root
-          password: camellia20.
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          druid:
-            initial-size: 20
-            max-active: 60
-            min-idle: 2
-            max-wait: 60000
-            time-between-eviction-runs-millis: 60000
-            min-evictable-idle-time-millis: 300000
+
   # Redis 配置
   data:
     redis:
@@ -114,14 +67,7 @@ alibaba:
   product: Dysmsapi
   domin: dysmsapi.aliyuncs.com
 
-mybatis-plus:
-  mapper-locations: classpath*:mapper/**/*.xml
-
 ai:
   qwen:
     api-key: sk-54b1779f9eb743faa8ac2a73091ce97d
     model: qwen3-max
-
-
-elasticsearch:
-  uris: http://localhost:9200

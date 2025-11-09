@@ -19,21 +19,26 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-
-        <!-- SpringCloud Alibaba Nacos Config -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
         <!-- SpringBoot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- Spring Cloud LoadBalancer -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
         <!-- bit-common -->
         <dependency>
             <groupId>bit</groupId>
             <artifactId>bit-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-security</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- lombok -->
         <dependency>
@@ -45,6 +50,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!-- bit-api-user -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-api-user</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
 

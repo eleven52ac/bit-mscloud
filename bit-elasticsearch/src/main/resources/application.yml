@@ -19,7 +19,7 @@ spring:
     # Nacos配置
     nacos:
       discovery:
-        ip: bg-mac-mini.tailfbfced.ts.net
+        ip: 127.0.0.1
         port: 19912
         server-addr: 100.97.223.54:8848
         namespace: public

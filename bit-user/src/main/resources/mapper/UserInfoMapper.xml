@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bit.user.mapper.UserInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.bit.user.entity.UserInfoEntity">
+            <id property="userId" column="user_id" />
+            <result property="username" column="username" />
+            <result property="password" column="password" />
+            <result property="phoneNumber" column="phone_number" />
+            <result property="email" column="email" />
+            <result property="firstName" column="first_name" />
+            <result property="lastName" column="last_name" />
+            <result property="gender" column="gender" />
+            <result property="dateOfBirth" column="date_of_birth" />
+            <result property="avatarUrl" column="avatar_url" />
+            <result property="signature" column="signature" />
+            <result property="address" column="address" />
+            <result property="createdAt" column="created_at" />
+            <result property="updatedAt" column="updated_at" />
+            <result property="isActive" column="is_active" />
+            <result property="isDeleted" column="is_deleted" />
+            <result property="lastLogin" column="last_login" />
+            <result property="loginCount" column="login_count" />
+            <result property="role" column="role" />
+            <result property="failedLoginAttempts" column="failed_login_attempts" />
+            <result property="lockTime" column="lock_time" />
+            <result property="passwordResetToken" column="password_reset_token" />
+            <result property="passwordResetExpires" column="password_reset_expires" />
+            <result property="createdBy" column="created_by" />
+            <result property="updatedBy" column="updated_by" />
+            <result property="facebookId" column="facebook_id" />
+            <result property="googleId" column="google_id" />
+            <result property="twitterId" column="twitter_id" />
+            <result property="lastActivity" column="last_activity" />
+            <result property="totalSpent" column="total_spent" />
+            <result property="membershipLevel" column="membership_level" />
+            <result property="isVerified" column="is_verified" />
+            <result property="isBanned" column="is_banned" />
+            <result property="banReason" column="ban_reason" />
+            <result property="locale" column="locale" />
+            <result property="timezone" column="timezone" />
+            <result property="birthplace" column="birthplace" />
+            <result property="referralCode" column="referral_code" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,username,password,phone_number,email,first_name,
+        last_name,gender,date_of_birth,avatar_url,signature,
+        address,created_at,updated_at,is_active,is_deleted,
+        last_login,login_count,role,failed_login_attempts,lock_time,
+        password_reset_token,password_reset_expires,created_by,updated_by,facebook_id,
+        google_id,twitter_id,last_activity,total_spent,membership_level,
+        is_verified,is_banned,ban_reason,locale,timezone,
+        birthplace,referral_code
+    </sql>
+
+</mapper>

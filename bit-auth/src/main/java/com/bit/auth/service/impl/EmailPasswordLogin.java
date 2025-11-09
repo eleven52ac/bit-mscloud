@@ -1,0 +1,24 @@
+package com.bit.auth.service.impl;
+
+import com.bit.auth.dto.request.TokenRequest;
+import com.bit.auth.service.LoginStrategy;
+import common.dto.response.ApiResponse;
+import common.dto.reuqest.ClientMetaInfo;
+import common.enums.LoginTypeEnum;
+
+/**
+ * @Datetime: 2025年11月08日15:24
+ * @Author: Eleven52AC
+ * @Description: 邮箱密码登录服务实现类
+ */
+public class EmailPasswordLogin implements LoginStrategy {
+    @Override
+    public LoginTypeEnum getLoginType() {
+        return null;
+    }
+
+    @Override
+    public ApiResponse<String> login(TokenRequest request, ClientMetaInfo info) {
+        return null;
+    }
+}
