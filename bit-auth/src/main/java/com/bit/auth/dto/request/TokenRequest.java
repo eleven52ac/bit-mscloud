@@ -1,6 +1,9 @@
 package com.bit.auth.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,6 +14,9 @@ import java.io.Serializable;
  * @Description: 登录请求
  */
 @Data
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class TokenRequest implements Serializable {
 
     @Serial

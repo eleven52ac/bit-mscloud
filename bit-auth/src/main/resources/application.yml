@@ -2,15 +2,15 @@
 server:
   port: 19903
   address: 0.0.0.0
-  ssl:
-    enabled: true
-    key-store: classpath:certs/server-keystore.p12
-    key-store-password: changeit
-    key-store-type: PKCS12
-    trust-store: classpath:certs/ca-truststore.p12
-    trust-store-password: changeit
-    trust-store-type: PKCS12
-    client-auth: need
+#  ssl:
+#    enabled: true
+#    key-store: classpath:certs/server-keystore.p12
+#    key-store-password: changeit
+#    key-store-type: PKCS12
+#    trust-store: classpath:certs/ca-truststore.p12
+#    trust-store-password: changeit
+#    trust-store-type: PKCS12
+#    client-auth: want
 
 spring:
   application:
@@ -20,13 +20,10 @@ spring:
     # Nacos配置
     nacos:
       discovery:
-        ip: 127.0.0.1
-        port: 19903
         server-addr: 100.97.223.54:8848
         namespace: public
         group: DEFAULT_GROUP
-        secure: true
-
+        secure: false
   # 邮件服务配置
   mail:
     host: smtp.163.com # 邮件服务器地址
@@ -43,7 +40,6 @@ spring:
   data:
     redis:
       host: 100.97.223.54
-      # host: 127.0.0.1
       port: 6379
       password: camellia20.
       database: 2  # 使用 Redis 的数据库 2

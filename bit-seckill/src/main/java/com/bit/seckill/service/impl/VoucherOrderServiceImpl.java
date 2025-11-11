@@ -12,7 +12,7 @@ import com.bit.seckill.service.VoucherOrderService;
 import common.dto.response.ApiResponse;
 import common.dto.response.ApiUtils;
 import common.utils.RedisLock;
-import common.utils.SnowflakeIdGenerator;
+import common.utils.core.SnowflakeIdGenerator;
 import common.utils.UserThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;

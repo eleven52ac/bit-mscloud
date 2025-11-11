@@ -1,9 +1,14 @@
 package com.bit.user.api.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -11,8 +16,12 @@ import java.util.Date;
  * @TableName user_info
  */
 @Data
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserInfoEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 6381377810326387929L;
 
     /**
@@ -78,12 +87,12 @@ public class UserInfoEntity implements Serializable {
     /**
      * 创建时间
      */
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     /**
      * 更新时间
      */
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     /**
      * 是否激活
@@ -98,7 +107,7 @@ public class UserInfoEntity implements Serializable {
     /**
      * 最后登录时间
      */
-    private Date lastLogin;
+    private LocalDateTime lastLogin;
 
     /**
      * 登录次数
@@ -118,7 +127,7 @@ public class UserInfoEntity implements Serializable {
     /**
      * 锁定时间
      */
-    private Date lockTime;
+    private LocalDateTime lockTime;
 
     /**
      * 密码重置token
@@ -128,7 +137,7 @@ public class UserInfoEntity implements Serializable {
     /**
      * token过期时间
      */
-    private Date passwordResetExpires;
+    private LocalDateTime passwordResetExpires;
 
     /**
      * 创建者ID
@@ -158,7 +167,7 @@ public class UserInfoEntity implements Serializable {
     /**
      * 最后活动时间
      */
-    private Date lastActivity;
+    private LocalDateTime lastActivity;
 
     /**
      * 总消费金额

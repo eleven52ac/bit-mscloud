@@ -1,16 +1,6 @@
 server:
   port: 19902
   address: 0.0.0.0
-  ssl:
-    enabled: true
-    key-store: classpath:certs/server-keystore.p12
-    key-store-password: changeit
-    key-store-type: PKCS12
-    trust-store: classpath:certs/ca-truststore.p12
-    trust-store-password: changeit
-    trust-store-type: PKCS12
-    client-auth: need
-
 spring:
   application:
     name: ms-user
@@ -19,12 +9,10 @@ spring:
     # Nacos配置
     nacos:
       discovery:
-        ip: bg-camellia.tailfbfced.ts.net
-        port: 19912
         server-addr: 100.97.223.54:8848
         namespace: public
         group: DEFAULT_GROUP
-        secure: true
+        secure: false
 
 
   datasource:
@@ -34,22 +22,13 @@ spring:
       datasource:
         master:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://100.97.223.54:3306/hotel?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-          username: root
-          password: camellia20.
-        house:
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://100.97.223.54:3306/prhouseserver?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+          url: jdbc:mysql://100.97.223.54:3306/bit-mscloud?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
           username: root
           password: camellia20.
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   type-aliases-package: mselasticsearch.domain
-
-elasticsearch:
-  host: 100.97.223.54
-  port: 9200
 
 logging:
   level:

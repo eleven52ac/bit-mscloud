@@ -1,15 +1,18 @@
 package com.bit.auth.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.bit.auth.dto.request.TokenRequest;
 import com.bit.auth.service.RegisterStrategy;
 import com.bit.user.api.model.UserInfoEntity;
 import com.bit.user.api.service.UserInfoFeignClient;
 import common.constant.RedisConstants;
 import common.dto.response.ApiResponse;
-import common.dto.response.ApiUtils;
 import common.dto.reuqest.ClientMetaInfo;
 import common.enums.RegisterTypeEnum;
+import common.utils.BCryptUtil;
 import common.utils.RegexUtils;
+import common.utils.core.IdGenerator;
+import common.utils.jwt.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +22,10 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -69,6 +75,8 @@ public class EmailCaptchaRegister implements RegisterStrategy {
         if (isFail(validation)){
             return validation;
         }
+        // 标准化输入
+        normalizedInput(request);
         // 邮箱限流
         validation = mailboxRateLimiting(request.getEmail());
         if (isFail(validation)){
@@ -89,8 +97,24 @@ public class EmailCaptchaRegister implements RegisterStrategy {
         if (isFail(validation)){
             return validation;
         }
-        // todo 待完善
+        // 创建用户
+        validation = createUser(request);
+        if (isFail(validation)){
+            return validation;
+        }
+        // 返回结果
         return ApiResponse.success("注册成功");
+    }
+
+
+    /**
+     *
+     * @Author: Eleven52AC
+     * @Description: 标准化输入
+     * @param request
+     */
+    private void normalizedInput(TokenRequest request) {
+        request.setEmail(request.getEmail().trim().toLowerCase());
     }
 
 
@@ -110,6 +134,9 @@ public class EmailCaptchaRegister implements RegisterStrategy {
         }
         if (StringUtils.isBlank(request.getUsername())){
             return ApiResponse.badRequest("用户名不能为空");
+        }
+        if (StringUtils.isBlank(request.getCaptcha())){
+            return ApiResponse.badRequest("验证码不能为空");
         }
         if (RegexUtils.isEmailInvalid(request.getEmail())) {
             return ApiResponse.badRequest("邮箱格式不正确");
@@ -238,15 +265,91 @@ public class EmailCaptchaRegister implements RegisterStrategy {
      * @return
      */
     private ApiResponse<String> validateCaptcha(String email, String captcha) {
-        // 从redis中获取验证码,并判断非空且验证码正确.
-        String rightCaptcha = stringRedisTemplate.opsForValue().get(RedisConstants.CAPTCHA_EMAIL_PREFIX + email);
-        if (rightCaptcha == null){
-            return ApiResponse.error("验证码已过期");
+        String key = RedisConstants.CAPTCHA_EMAIL_PREFIX + email;
+        try{
+            String rightCaptcha = stringRedisTemplate.opsForValue().get(key);
+            if (ObjectUtils.isEmpty(rightCaptcha)){
+                return ApiResponse.error("验证码已过期");
+            }
+            // 比较验证码（不区分大小写）
+            if (!captcha.equalsIgnoreCase(rightCaptcha)) {
+                // 累计错误次数
+                String errorKey = RedisConstants.CAPTCHA_ERROR_ATTEMPTS_PREFIX + email;
+                Long errorCount = stringRedisTemplate.opsForValue().increment(errorKey);
+                if (errorCount != null && errorCount.equals(1L)) {
+                    stringRedisTemplate.expire(errorKey, 10, TimeUnit.MINUTES); // 错误计数10分钟过期
+                }
+                if (errorCount >= 3L) {
+                    stringRedisTemplate.delete(key);
+                    stringRedisTemplate.delete(RedisConstants.CAPTCHA_ERROR_ATTEMPTS_PREFIX + email);
+                    return ApiResponse.badRequest("验证码错误次数过多，请重新获取验证码。");
+                }
+                return ApiResponse.error("验证码错误");
+            }
+            // 验证成功，删除验证码。
+            stringRedisTemplate.delete(key);
+            // 同时删除错误计数
+            stringRedisTemplate.delete(RedisConstants.CAPTCHA_ERROR_ATTEMPTS_PREFIX + email);
+            return ApiResponse.success("验证码验证成功");
+        }catch (RedisConnectionFailureException e) {
+            log.error("Redis连接异常，验证码校验失败: {}", e.getMessage());
+            return ApiResponse.error("系统繁忙，请稍后再试");
         }
-        if (!captcha.equals(rightCaptcha)){
-            return ApiResponse.error("验证码错误");
-        }
-        // todo 细节优化
-        return ApiResponse.success("验证码正确");
     }
+
+    /**
+     *
+     * @param request
+     * @param userId
+     * @return
+     * @Author: Eleven52AC
+     * @Description: 创建用户
+     */
+    private ApiResponse<String> createUser(TokenRequest request) {
+        try {
+            Long userId = IdGenerator.nextId();
+            LocalDateTime now = LocalDateTime.now();
+            UserInfoEntity userInfo = new UserInfoEntity()
+                    .setUserId(userId)
+                    .setUsername(request.getUsername())
+                    .setPassword(BCryptUtil.encode(request.getPassword()))
+                    .setEmail(request.getEmail())
+                    .setCreatedAt(now)
+                    .setLastLogin(now)
+                    .setLoginCount(1);
+            // 远程调用用户中心创建
+            ApiResponse<String> response = userInfoFeignClient.createUser(userInfo);
+            if (isFail(response)) {
+                log.error("创建用户失败: {}", response.getMessage());
+                return ApiResponse.error("系统繁忙，请稍后再试");
+            }
+
+            // 生成 JWT Token
+            Map<String, String> claims = Map.of(
+                    "userId", userId.toString(),
+                    "email", request.getEmail()
+            );
+            String token = JwtUtil.generateToken(claims);
+
+            // 存入 Redis（按用户ID维度，方便踢人/注销）
+            String redisKey = USER_TOKEN_PREFIX + userId;
+            stringRedisTemplate.opsForValue().set(
+                    redisKey,
+                    JSONUtil.toJsonStr(Map.of(
+                            "token", token,
+                            "email", request.getEmail(),
+                            "createdAt", now.toString()
+                    )),
+                    Duration.ofHours(1)
+            );
+
+            log.info("用户注册成功: userId={}, email={}", userId, request.getEmail());
+            return ApiResponse.success(token, "注册成功，已自动登录");
+
+        } catch (Exception e) {
+            log.error("注册创建用户异常: {}", e.getMessage(), e);
+            return ApiResponse.error("注册失败，请稍后再试");
+        }
+    }
+
 }

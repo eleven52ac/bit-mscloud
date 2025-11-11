@@ -1,4 +1,4 @@
-package com.bit.auth;
+package com.bit.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -15,10 +15,10 @@ import java.net.InetAddress;
 @EnableFeignClients(basePackages = "com.bit.user.api.service")
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = {"com.bit", "common"})
-public class BitAuthApplication {
+public class BitUserApplication {
 
     public static void main(String[] args) throws Exception {
-        SpringApplication app = new SpringApplication(BitAuthApplication.class);
+        SpringApplication app = new SpringApplication(BitUserApplication.class);
         Environment env = app.run(args).getEnvironment();
         printServerStartupInfo(env);
     }

@@ -31,8 +31,8 @@ public class CaptchaStrategyDispatcher {
 
     /**
      *
-     * @param request
-     * @param info
+     * @param identifier
+     * @param captchaMethod
      * @param clientInfo
      * @Author: Eleven52AC
      * @Description: 注册

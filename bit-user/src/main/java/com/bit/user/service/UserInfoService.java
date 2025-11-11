@@ -10,4 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserInfoService extends IService<UserInfoEntity> {
 
+    UserInfoEntity getUserInfoByEmail(String email);
+
+    UserInfoEntity getUserInfoByUsername(String username);
 }

@@ -1,14 +1,14 @@
 server:
   port: 19010
-  ssl:
-    enabled: true
-    key-store: classpath:certs/gateway-keystore.p12
-    key-store-password: changeit
-    key-store-type: PKCS12
-    trust-store: classpath:certs/ca-truststore.p12
-    trust-store-password: changeit
-    trust-store-type: PKCS12
-    client-auth: want
+#  ssl:
+#    enabled: true
+#    key-store: classpath:certs/gateway-keystore.p12
+#    key-store-password: changeit
+#    key-store-type: PKCS12
+#    trust-store: classpath:certs/ca-truststore.p12
+#    trust-store-password: changeit
+#    trust-store-type: PKCS12
+#    client-auth: want
 
 
 spring:
@@ -21,35 +21,35 @@ spring:
         server-addr: 100.97.223.54:8848
         namespace: public
         group: DEFAULT_GROUP
-        secure: false # 告诉注册中心这个服务是 https 协议
+        secure: false # 告诉注册中心这个服务是 http 协议
 
     gateway:
       # HTTP 客户端 SSL 配置（用于 mTLS）
-      httpclient:
-        ssl:
-          handshake-timeout: 10000
-          close-notify-flush-timeout: 3000
-          close-notify-read-timeout: 0
-          trusted-x509-certificates:
-            - classpath:certs/ca-cert.pem
-          key-store: classpath:certs/gateway-keystore.p12
-          key-store-password: changeit
-          key-store-type: PKCS12
-          trust-store: classpath:certs/ca-truststore.p12
-          trust-store-password: changeit
-          trust-store-type: PKCS12
-          use-insecure-trust-manager: false
+#      httpclient:
+#        ssl:
+#          handshake-timeout: 10000
+#          close-notify-flush-timeout: 3000
+#          close-notify-read-timeout: 0
+#          trusted-x509-certificates:
+#            - classpath:certs/ca-cert.pem
+#          key-store: classpath:certs/gateway-keystore.p12
+#          key-store-password: changeit
+#          key-store-type: PKCS12
+#          trust-store: classpath:certs/ca-truststore.p12
+#          trust-store-password: changeit
+#          trust-store-type: PKCS12
+#          use-insecure-trust-manager: false
 
       # 态服务发现路由
-      discovery:
-        locator:
-          enabled: true                 # 开启动态路由
-          lower-case-service-id: true   # 服务名自动转小写（推荐）
+#      discovery:
+#        locator:
+#          enabled: true                 # 开启动态路由
+#          lower-case-service-id: true   # 服务名自动转小写（推荐）
 
       # 静态路由配置（自定义前缀转发）
       routes:
         - id: user-service
-          uri: lb://user-service
+          uri: lb://ms-user
           predicates:
             - Path=/api/user/**
         - id: ms-elasticsearch

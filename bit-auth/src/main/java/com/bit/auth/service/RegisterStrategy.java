@@ -20,5 +20,13 @@ public interface RegisterStrategy {
      */
     RegisterTypeEnum getRegisterType();
 
+    /**
+     *
+     * @Author: Eleven52AC
+     * @Description: 注册
+     * @param request
+     * @param info
+     * @return
+     */
     ApiResponse<String> register(TokenRequest request, ClientMetaInfo info);
 }

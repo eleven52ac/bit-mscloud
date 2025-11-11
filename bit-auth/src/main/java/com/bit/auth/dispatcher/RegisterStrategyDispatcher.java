@@ -42,7 +42,7 @@ public class RegisterStrategyDispatcher {
             return ApiResponse.badRequest("注册请求不能为空");
         }
         String code = request.getRegisterType();
-        if (StringUtils.isBlank(request.getLoginType())){
+        if (StringUtils.isBlank(request.getRegisterType())){
             return ApiResponse.badRequest("注册类型不能为空");
         }
         RegisterTypeEnum registerType = RegisterTypeEnum.fromCode(code);

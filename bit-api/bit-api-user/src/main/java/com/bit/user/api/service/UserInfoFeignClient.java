@@ -1,8 +1,10 @@
 package com.bit.user.api.service;
 
 import com.bit.user.api.model.UserInfoEntity;
+import common.dto.response.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -10,14 +12,18 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @Author: Eleven52AC
  * @Description: 用户信息服务 API
  */
-@FeignClient(name = "ms-user", path = "api/user", contextId = "userInfoFeignClient")
+@FeignClient(name = "ms-user", path = "/user", contextId = "userInfoFeignClient")
 public interface UserInfoFeignClient {
 
     @GetMapping("/username")
     UserInfoEntity getUserInfoByUsername(@RequestParam("username") String username);
 
+    @GetMapping("/existsByEmail")
     boolean existsByEmail(String email);
 
     @GetMapping("/email")
     UserInfoEntity getUserInfoByEmail(@RequestParam ("email") String email);
+
+    @PostMapping("/create")
+    ApiResponse<String> createUser(UserInfoEntity userInfo);
 }

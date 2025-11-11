@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
@@ -84,12 +85,12 @@ public class UserInfoEntity implements Serializable {
     /**
      * 创建时间
      */
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     /**
      * 更新时间
      */
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     /**
      * 是否激活
@@ -104,7 +105,7 @@ public class UserInfoEntity implements Serializable {
     /**
      * 最后登录时间
      */
-    private Date lastLogin;
+    private LocalDateTime lastLogin;
 
     /**
      * 登录次数
@@ -124,7 +125,7 @@ public class UserInfoEntity implements Serializable {
     /**
      * 锁定时间
      */
-    private Date lockTime;
+    private LocalDateTime lockTime;
 
     /**
      * 密码重置token
@@ -134,7 +135,7 @@ public class UserInfoEntity implements Serializable {
     /**
      * token过期时间
      */
-    private Date passwordResetExpires;
+    private LocalDateTime passwordResetExpires;
 
     /**
      * 创建者ID
@@ -164,7 +165,7 @@ public class UserInfoEntity implements Serializable {
     /**
      * 最后活动时间
      */
-    private Date lastActivity;
+    private LocalDateTime lastActivity;
 
     /**
      * 总消费金额

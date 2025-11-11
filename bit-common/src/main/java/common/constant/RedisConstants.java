@@ -9,10 +9,22 @@ package common.constant;
  */
 public final class RedisConstants {
 
+    /**
+     * 用户token前缀
+     */
+    public static final String USER_TOKEN_PREFIX = "user:token:";
+
     private RedisConstants(){
         // 私有构造器防止实例化
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
+
+    /**
+     * 验证码失败次数
+     */
+    public static final String CAPTCHA_FAILURE_ATTEMPTS_PREFIX =  "captcha:failure:";
+
+    public static final String CAPTCHA_ERROR_ATTEMPTS_PREFIX = "captcha:error:";
 
     public static final String CAPTCHA_EMAIL_PREFIX = "captcha:email:";
 
@@ -31,6 +43,9 @@ public final class RedisConstants {
     public static final String CAPTCHA_IP_RATE_LIMIT_PREFIX = "captcha:ip:rate:";
 
     public static final String USER_INFO_PREFIX = "user:info:";
+
+    // token
+    public static final String TOKEN_PREFIX = "token:";
 
     public static final String LOGIN_ATTEMPT_PREFIX = "login:attempt:";
 

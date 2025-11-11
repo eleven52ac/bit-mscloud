@@ -1,5 +1,6 @@
 package com.bit.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bit.user.entity.UserInfoEntity;
 import com.bit.user.service.UserInfoService;
@@ -15,6 +16,21 @@ import org.springframework.stereotype.Service;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEntity>
     implements UserInfoService{
 
+    @Override
+    public UserInfoEntity getUserInfoByEmail(String email) {
+        LambdaQueryWrapper<UserInfoEntity> queryWrapper = new LambdaQueryWrapper<UserInfoEntity>()
+                .eq(UserInfoEntity::getEmail, email)
+                .eq(UserInfoEntity::getIsDeleted, false);
+        return this.getOne(queryWrapper);
+    }
+
+    @Override
+    public UserInfoEntity getUserInfoByUsername(String username) {
+        LambdaQueryWrapper<UserInfoEntity> queryWrapper = new LambdaQueryWrapper<UserInfoEntity>()
+                .eq(UserInfoEntity::getUsername, username)
+                .eq(UserInfoEntity::getIsDeleted, false);
+                return this.getOne(queryWrapper);
+    }
 }
 
 
