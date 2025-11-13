@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * Ai 聊天
  * @Datetime: 2025年11月07日16:47
  * @Author: Eleven52AC
  * @Description: 聊天控制器
@@ -23,7 +24,7 @@ public class AiChatController {
 
 
     /**
-     *
+     * 聊天会话
      * @Author: Eleven52AC
      * @Description: 聊天会话
      * @param sessionId

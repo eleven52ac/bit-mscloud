@@ -8,8 +8,8 @@ package common.enums;
 public enum CaptchaMethodEnum {
 
 
-    PHONE_CAPTCHA("phone_code", "手机验证码"),
-    EMAIL_CAPTCHA("email_code", "邮箱验证码");
+    PHONE_CAPTCHA("phone_captcha", "手机验证码"),
+    EMAIL_CAPTCHA("email_captcha", "邮箱验证码");
 
     private final String code;
 

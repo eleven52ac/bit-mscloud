@@ -10,8 +10,8 @@ public enum LoginTypeEnum {
     USERNAME_PASSWORD("username_password", "用户名密码登录"),
     EMAIL_PASSWORD("email_password", "邮箱密码登录"),
     PHONE_PASSWORD("phone_password", "手机密码登录"),
-    PHONE_CODE("phone_code", "手机验证码登录"),
-    EMAIL_CODE("email_code", "邮箱验证码登录");
+    PHONE_CODE("phone_captcha", "手机验证码登录"),
+    EMAIL_CODE("email_captcha", "邮箱验证码登录");
 
     private final String code;
 

@@ -14,12 +14,6 @@
     <name>common</name>
 
     <dependencies>
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <!-- itext7-core (BOM) -->
         <dependency>
             <groupId>com.itextpdf</groupId>
