@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 权限认证
  * @Datetime: 2025年11月07日17:33
  * @Author: Eleven52AC
  * @Description: token 控制器
@@ -31,9 +32,9 @@ public class TokenController extends BaseController {
 
 
     /**
-     *
+     * 登录
      * @Author: Eleven52AC
-     * @Description: 登录
+     * @Description:
      * @param request
      * @return
      */
@@ -44,9 +45,9 @@ public class TokenController extends BaseController {
 
 
     /**
-     *
+     * 注册
      * @Author: Eleven52AC
-     * @Description: 注册
+     * @Description:
      * @param request
      * @return
      */
@@ -57,11 +58,11 @@ public class TokenController extends BaseController {
 
 
     /**
-     *
+     * 获取验证码
      * @Author: Eleven52AC
-     * @Description: 获取验证码
-     * @param  identifier
-     * @param captchaMethod
+     * @Description:
+     * @param  identifier 唯一标识符
+     * @param captchaMethod 验证码方式
      * @return
      */
     @GetMapping("/captcha")

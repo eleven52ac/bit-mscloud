@@ -99,11 +99,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
         }
         // 创建用户
         validation = createUser(request);
-        if (isFail(validation)){
-            return validation;
-        }
-        // 返回结果
-        return ApiResponse.success("注册成功");
+        return validation;
     }
 
 
@@ -238,8 +234,8 @@ public class EmailCaptchaRegister implements RegisterStrategy {
                 String existingUsername = userInfo.getUsername();
                 // 重复提交注册（邮箱 & 用户名一致）
                 if (existingUsername != null && existingUsername.equalsIgnoreCase(normalizedUsername)) {
-                    log.info("用户 {} 重复注册尝试", normalizedEmail);
-                    return ApiResponse.badRequest("该邮箱已注册，请勿重复提交。");
+                    log.info("用户 {} 重复注册尝试 或者 该邮箱已经注册。", normalizedEmail);
+                    return ApiResponse.badRequest("该邮箱已注册。");
                 } else {
                     log.warn("邮箱 {} 已存在（不同用户），可能存在撞号注册行为", normalizedEmail);
                     return ApiResponse.success(null,"该邮箱已被用于注册。");

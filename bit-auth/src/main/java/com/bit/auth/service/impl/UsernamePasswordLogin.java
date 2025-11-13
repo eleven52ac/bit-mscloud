@@ -86,7 +86,7 @@ public class UsernamePasswordLogin implements LoginStrategy {
         // 登录成功，将用户信息存入 redis 中。
         String token =  JWT.create().setPayload("userKey",username).setSigner(JWTSignerUtil.none()).sign();
         stringRedisTemplate.opsForValue().set(RedisConstants.USER_INFO_PREFIX+token, JSONUtil.toJsonStr(userInfo), Duration.ofHours(1));
-        // 开启另一个线程、取检查是否新地址或者新设备，如果是就
+        // 开启另一个线程、取检查是否新地址或者新设备，如果是就推动消息。
         eventPublisher.publishEvent(new UserLoginEvent(userInfo, info));
         return ApiResponse.success(token, "登录成功");
     }

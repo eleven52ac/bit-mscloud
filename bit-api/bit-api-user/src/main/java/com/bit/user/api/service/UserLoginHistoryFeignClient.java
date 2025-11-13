@@ -16,7 +16,7 @@ import java.util.List;
  * @Author: Eleven52AC
  * @Description:
  */
-@FeignClient(name = "ms-user", path = "api/user/login/history", contextId = "userLoginHistoryFeignClient")
+@FeignClient(name = "ms-user", path = "/user/login/history", contextId = "userLoginHistoryFeignClient")
 public interface UserLoginHistoryFeignClient {
 
     /**

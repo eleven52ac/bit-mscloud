@@ -13,6 +13,7 @@ public class ClientMetaInfo {
     private String device;
     private String region;
     private String network;
+    private String internalToken;
 
     public static ClientMetaInfo from(HttpServletRequest req) {
         ClientMetaInfo info = new ClientMetaInfo();
@@ -23,6 +24,7 @@ public class ClientMetaInfo {
         String region = new String(Base64.getDecoder().decode(regionEncoded), StandardCharsets.UTF_8);
         info.setRegion(region);
         info.setNetwork(req.getHeader("X-Client-Network"));
+        info.setInternalToken(req.getHeader("X-Internal-Token"));
         return info;
     }
 }

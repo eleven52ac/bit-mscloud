@@ -1,5 +1,6 @@
 package com.bit.auth.event;
 
+import com.bit.auth.config.InternalTokenContext;
 import com.bit.auth.message.MessageService;
 import com.bit.user.api.model.UserInfoEntity;
 import com.bit.user.api.model.UserLoginHistoryEntity;
@@ -29,30 +30,40 @@ public class UserLoginEventListener {
     @Async
     @EventListener
     public void handleUserLogin(UserLoginEvent event) {
-        UserInfoEntity user = event.getUserInfo();
-        ClientMetaInfo info = event.getClientInfo();
-        // 查询上一次登录记录
-        List<UserLoginHistoryEntity> lasts = userLoginHistoryFeignClient.recentLoginData(user.getUserId());
-        // ip
-        Set<String> ips = lasts.stream().map(UserLoginHistoryEntity::getIp).collect(Collectors.toSet());
-        // 登录地
-        Set<String> regions = lasts.stream().map(UserLoginHistoryEntity::getRegion).collect(Collectors.toSet());
-        boolean suspicious = ips.contains(info.getIp());
-        String remark = null;
-        if (!suspicious){
-            remark = "异地登录";
+        try{
+            // 从 ClientMetaInfo 中取 token
+            String token = event.getClientInfo().getInternalToken();
+            if (token != null) {
+                InternalTokenContext.set(token);
+            }
+            UserInfoEntity user = event.getUserInfo();
+            ClientMetaInfo info = event.getClientInfo();
+            // 查询上一次登录记录
+            List<UserLoginHistoryEntity> lasts = userLoginHistoryFeignClient.recentLoginData(user.getUserId());
+            // ip
+            Set<String> ips = lasts.stream().map(UserLoginHistoryEntity::getIp).collect(Collectors.toSet());
+            // 登录地
+            Set<String> regions = lasts.stream().map(UserLoginHistoryEntity::getRegion).collect(Collectors.toSet());
+            boolean suspicious = ips.contains(info.getIp());
+            String remark = null;
+            if (!suspicious){
+                remark = "异地登录";
+            }
+            suspicious = regions.contains(info.getRegion());
+            if (!suspicious){
+                remark = "新登录地";
+            }
+            // 保存当前登录记录
+            saveCurrentLoginRecord(user.getUserId(), info,  suspicious,  remark);
+            // 异步提醒用户
+            if (!suspicious) {
+                log.warn("⚠️ 检测到用户 [{}] {}", user.getUsername(), remark);
+                messageService.sendLoginAlert(user, info, remark);
+            }
+        }finally {
+            InternalTokenContext.clear();
         }
-        suspicious = regions.contains(info.getRegion());
-        if (!suspicious){
-            remark = "新登录地";
-        }
-        // 保存当前登录记录
-        saveCurrentLoginRecord(user.getUserId(), info,  suspicious,  remark);
-        // 异步提醒用户
-        if (suspicious) {
-            log.warn("⚠️ 检测到用户 [{}] {}", user.getUsername(), remark);
-            messageService.sendLoginAlert(user, info, remark);
-        }
+
     }
 
     /**

@@ -35,7 +35,18 @@ public class MessageService {
                     info.getIp(),
                     LocalDateTime.now()
             );
-            emailSendUtils.sendHtmlEmail("安全提醒", msg, user.getEmail());
+            String target = null;
+            // 优先使用邮箱
+            if (user.getEmail() != null && !user.getEmail().isBlank()) {
+                target = user.getEmail();
+            }// 否则使用手机号（假设你支持短信或可以作为备用通知）
+            else if (user.getPhoneNumber() != null && !user.getPhoneNumber().isBlank()) {
+                target = user.getPhoneNumber();
+            }// 最后 fallback 到用户名（可能用来发送站内信或日志提示）
+            else {
+                target = user.getUsername();
+            }
+            emailSendUtils.sendHtmlEmail("安全提醒", msg, target);
             log.info("📧 已发送安全提醒给用户 [{}]，原因：{}", user.getUsername(), reason);
         } catch (Exception e) {
             log.error("❌ 发送登录提醒失败：用户 [{}]，原因：{}，错误信息：{}",

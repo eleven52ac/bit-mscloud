@@ -57,7 +57,7 @@ spring:
           predicates:
             - Path=/api/es/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
         - id: ms-auth
           uri: lb://ms-auth
           predicates:
