@@ -1,8 +1,9 @@
 package com.bit.auth.service;
 
-import common.dto.response.ApiResponse;
-import common.dto.reuqest.ClientMetaInfo;
-import common.enums.CaptchaMethodEnum;
+
+import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.core.enums.CaptchaMethodEnum;
 
 /**
  * @Datetime: 2025年11月09日18:40

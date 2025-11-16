@@ -1,16 +1,15 @@
 package com.bit.auth;
-
-import commons.enums.RSAAlgorithmEnum;
-import common.utils.RSAUtils;
+import com.bit.common.core.enums.RSAAlgorithmEnum;
+import com.bit.common.utils.crypto.RSAUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import static commons.enums.RSAAlgorithmEnum.*;
-import static commons.enums.RSAKeySizeEnum.*;
-import static commons.enums.RSASecretKey.*;
+import static com.bit.common.core.enums.RSAAlgorithmEnum.OAEP_SHA256;
+import static com.bit.common.core.enums.RSAKeySizeEnum.RSA_4096;
+import static com.bit.common.core.enums.RSASecretKey.RSA_SECRET_KEY_1;
 
 /**
  * @Datetime: 2025年06月05日11:11

@@ -12,11 +12,10 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import common.dto.response.ApiResponse;
-import common.dto.response.ApiUtils;
-import common.utils.BCryptUtil;
-import common.utils.RegexUtils;
-import common.config.AliyunSmsConfig;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.thirdparty.config.AliyunSmsConfig;
+import com.bit.common.utils.crypto.BCryptUtils;
+import com.bit.common.utils.verify.RegexUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,12 +82,12 @@ public class SmsCaptchaServiceImpl implements CaptchaService {
     public ApiResponse<String> loginOrRegister(String phoneNumber, String password, String captcha, HttpSession session) {
         // 3. 手机号合法校验
         if (RegexUtils.isPhoneInvalid(phoneNumber)){
-            return ApiUtils.error("手机号格式错误");
+            return ApiResponse.error("手机号格式错误");
         }
         // 4. 验证码校验
         String rightCaptcha = (String) session.getAttribute("captcha");
         if (!captcha.equals(rightCaptcha)){
-            return ApiUtils.error("验证码错误");
+            return ApiResponse.error("验证码错误");
         }
         session.removeAttribute("captcha");
         // 5. 检查用户是否存在。
@@ -100,18 +99,18 @@ public class SmsCaptchaServiceImpl implements CaptchaService {
             userInfo = new UserInfo();
             userInfo.setUsername(RandomUtil.randomString(10));
             userInfo.setPhoneNumber(phoneNumber);
-            userInfo.setPassword(BCryptUtil.encode(password));
+            userInfo.setPassword(BCryptUtils.encode(password));
             userInfo.setLoginCount(1);
             userInfo.setCreatedAt(new Date());
             userInfoService.save(userInfo);
         } else{ // 7. 用户存在就校验密码
-            boolean matchesResult = BCryptUtil.matches(password, userInfo.getPassword());
+            boolean matchesResult = BCryptUtils.matches(password, userInfo.getPassword());
             if (!matchesResult){
-                return ApiUtils.error("密码错误");
+                return ApiResponse.error("密码错误");
             }
         }
         session.setAttribute("user", userInfo);
-        return ApiUtils.success("登录成功");
+        return ApiResponse.success("登录成功");
     }
 
 }

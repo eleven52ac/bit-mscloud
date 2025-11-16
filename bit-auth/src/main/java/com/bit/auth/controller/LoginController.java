@@ -1,11 +1,10 @@
 package com.bit.auth.controller;
 
-import com.bit.auth.service.CaptchaService;
 import cn.hutool.core.util.NumberUtil;
-import common.annotation.CheckLogin;
-import common.dto.response.ApiResponse;
-import common.dto.response.ApiUtils;
-import common.utils.UserThreadLocal;
+import com.bit.auth.service.CaptchaService;
+import com.bit.common.core.context.UserContext;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.security.annotation.CheckLogin;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,18 +51,18 @@ public class LoginController {
     public ApiResponse<String> smsVerification(@RequestParam("phoneOrEmail") String phoneOrEmail, HttpSession session) {
         try{
             // 1. 字符串空校验
-            if (phoneOrEmail == null) return ApiUtils.badRequest("验证方式不能为空！");
+            if (phoneOrEmail == null) return ApiResponse.badRequest("验证方式不能为空！");
             // 2. 判断是号码还是邮箱
             Boolean result;
             if(phoneOrEmail.contains("@")){
                 result = strategyMap.get("email").sendCaptcha(phoneOrEmail, session);
             }else if(NumberUtil.isNumber(phoneOrEmail)){
                 result = strategyMap.get("sms").sendCaptcha(phoneOrEmail, session);
-            }else return ApiUtils.badRequest("验证方式不支持！");
-            return result ? ApiUtils.success("验证码发送成功！") : ApiUtils.error("验证码发送失败！");
+            }else return ApiResponse.badRequest("验证方式不支持！");
+            return result ? ApiResponse.success("验证码发送成功！") : ApiResponse.error("验证码发送失败！");
         }catch (Exception e){
             log.error("发送失败！", e);
-            return ApiUtils.error("验证码发送失败！");
+            return ApiResponse.error("验证码发送失败！");
         }
     }
 
@@ -83,24 +82,24 @@ public class LoginController {
                                  HttpSession session){
         try{
             // 1. 字符串空校验
-            if (phoneOrEmail == null) return ApiUtils.badRequest("验证方式不能为空！");
-            if (password == null) return ApiUtils.badRequest("密码不能为空！");
-            if (captcha == null) return ApiUtils.badRequest("验证码不能为空！");
+            if (phoneOrEmail == null) return ApiResponse.badRequest("验证方式不能为空！");
+            if (password == null) return ApiResponse.badRequest("密码不能为空！");
+            if (captcha == null) return ApiResponse.badRequest("验证码不能为空！");
             // 2. 判断是号码还是邮箱
             if (phoneOrEmail.contains("@")){
                 return strategyMap.get("email").loginOrRegister(phoneOrEmail, password, captcha, session);
             }else if(NumberUtil.isNumber(phoneOrEmail)){
                 return strategyMap.get("sms").loginOrRegister(phoneOrEmail, password, captcha, session);
-            } else return ApiUtils.badRequest("验证方式不支持！");
+            } else return ApiResponse.badRequest("验证方式不支持！");
         }catch (Exception e){
             log.error("登录失败！", e);
-            return ApiUtils.error("登录失败！");
+            return ApiResponse.error("登录失败！");
         }
     }
 
     @GetMapping("user/threadInfo")
     @CheckLogin
     public ApiResponse userThreadInfo(){
-        return ApiUtils.success(UserThreadLocal.getUserInfo());
+        return ApiResponse.success(UserContext.getCurrentUser());
     }
 }

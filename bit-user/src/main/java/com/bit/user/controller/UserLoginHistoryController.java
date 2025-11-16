@@ -1,9 +1,9 @@
 package com.bit.user.controller;
 
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.utils.core.IdGenerator;
 import com.bit.user.entity.UserLoginHistoryEntity;
 import com.bit.user.service.UserLoginHistoryService;
-import common.dto.response.ApiResponse;
-import common.utils.core.IdGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,5 @@
 package com.bit.user.filter;
 
-import common.constant.SaltConstants;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,10 +11,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import static com.bit.common.core.constant.security.SaltConstants.INTERNAL_AUTH_TOKEN_SECRET;
+
 @Component
 public class InternalTokenVerifier implements Filter {
 
-    private static final String SECRET = SaltConstants.INTERNAL_AUTH_TOKEN_SECRET;
+    private static final String SECRET = INTERNAL_AUTH_TOKEN_SECRET;
     private static final long EXPIRE_TIME_MS = 10 * 1000; // 10秒有效期
 
     @Override

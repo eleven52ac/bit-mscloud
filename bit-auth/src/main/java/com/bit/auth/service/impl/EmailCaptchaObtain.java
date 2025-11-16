@@ -2,12 +2,14 @@ package com.bit.auth.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.bit.auth.service.CaptchaStrategy;
-import common.constant.RedisConstants;
-import common.dto.response.ApiResponse;
-import common.dto.reuqest.ClientMetaInfo;
-import common.enums.CaptchaMethodEnum;
-import common.utils.EmailSendUtils;
-import common.utils.RegexUtils;
+
+import com.bit.common.core.constant.redis.RedisConstants;
+import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.core.enums.CaptchaMethodEnum;
+import com.bit.common.core.enums.EmailTemplateEnum;
+import com.bit.common.utils.ict.EmailSendUtils;
+import com.bit.common.utils.verify.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,10 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static common.constant.RedisConstants.LOCK_TTL_30;
-import static common.constant.RedisConstants.MAX_CAPTCHA_REQUESTS;
-import static common.dto.response.ApiResponse.isFail;
+import static com.bit.common.core.constant.redis.RedisConstants.LOCK_TTL_30;
+import static com.bit.common.core.constant.redis.RedisConstants.MAX_CAPTCHA_REQUESTS;
+import static com.bit.common.core.dto.response.ApiResponse.isFail;
+
 
 /**
  * @Datetime: 2025年11月09日18:52
@@ -197,8 +200,8 @@ public class EmailCaptchaObtain implements CaptchaStrategy {
             stringRedisTemplate.opsForValue().set(captchaKey, captcha, RedisConstants.LOCK_TTL_60, TimeUnit.SECONDS);
             // 异步发送邮件
             CompletableFuture.runAsync(() -> {
-                String subject = commons.enums.EmailTemplateEnum.VERIFICATION_CODE_EMAIL_HTML.getSubject();
-                String content = commons.enums.EmailTemplateEnum.VERIFICATION_CODE_EMAIL_HTML.set(captcha);
+                String subject = EmailTemplateEnum.VERIFICATION_CODE_EMAIL_HTML.getSubject();
+                String content = EmailTemplateEnum.VERIFICATION_CODE_EMAIL_HTML.set(captcha);
                 boolean sendSuccess = emailSendUtils.sendHtmlEmail(subject, content, email);
                 // 如果发送失败，清除验证码记录.
                 if (!sendSuccess) {

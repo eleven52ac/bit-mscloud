@@ -6,14 +6,13 @@ import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.bit.auth.event.UserLoginEvent;
 import com.bit.auth.dto.request.TokenRequest;
 import com.bit.auth.service.LoginStrategy;
+import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.core.dto.response.ApiStatus;
+import com.bit.common.core.enums.LoginTypeEnum;
+import com.bit.common.utils.crypto.BCryptUtils;
 import com.bit.user.api.model.UserInfoEntity;
 import com.bit.user.api.service.UserInfoFeignClient;
-import common.constant.RedisConstants;
-import common.dto.response.ApiResponse;
-import common.dto.response.ApiStatus;
-import common.dto.reuqest.ClientMetaInfo;
-import common.enums.LoginTypeEnum;
-import common.utils.BCryptUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+
+import static com.bit.common.core.constant.redis.RedisConstants.LOGIN_ATTEMPT_PREFIX;
+import static com.bit.common.core.constant.redis.RedisConstants.USER_INFO_PREFIX;
 
 /**
  * @Datetime: 2025年11月08日14:35
@@ -82,10 +84,10 @@ public class UsernamePasswordLogin implements LoginStrategy {
             return validation;
         }
         // 登录成功后重置计数器
-        stringRedisTemplate.delete(RedisConstants.LOGIN_ATTEMPT_PREFIX + username);
+        stringRedisTemplate.delete(LOGIN_ATTEMPT_PREFIX + username);
         // 登录成功，将用户信息存入 redis 中。
         String token =  JWT.create().setPayload("userKey",username).setSigner(JWTSignerUtil.none()).sign();
-        stringRedisTemplate.opsForValue().set(RedisConstants.USER_INFO_PREFIX+token, JSONUtil.toJsonStr(userInfo), Duration.ofHours(1));
+        stringRedisTemplate.opsForValue().set(USER_INFO_PREFIX + token, JSONUtil.toJsonStr(userInfo), Duration.ofHours(1));
         // 开启另一个线程、取检查是否新地址或者新设备，如果是就推动消息。
         eventPublisher.publishEvent(new UserLoginEvent(userInfo, info));
         return ApiResponse.success(token, "登录成功");
@@ -108,7 +110,7 @@ public class UsernamePasswordLogin implements LoginStrategy {
             log.info("用户密码为空");
             return ApiResponse.error("用户密码为空");
         }
-        boolean matchesResult = BCryptUtil.matches(password, userInfo.getPassword());
+        boolean matchesResult = BCryptUtils.matches(password, userInfo.getPassword());
         if (!matchesResult){
             log.info("密码错误");
             return ApiResponse.error("密码错误");
@@ -125,7 +127,7 @@ public class UsernamePasswordLogin implements LoginStrategy {
      * @return
      */
     private ApiResponse<String> antiBruteForceCracking(String username, String password) {
-        String attemptKey = RedisConstants.LOGIN_ATTEMPT_PREFIX + username;
+        String attemptKey = LOGIN_ATTEMPT_PREFIX + username;
         Long attempts = stringRedisTemplate.opsForValue().increment(attemptKey);
         if (attempts > 5) {
             stringRedisTemplate.expire(attemptKey, 1, TimeUnit.HOURS);

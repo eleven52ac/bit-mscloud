@@ -7,12 +7,10 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import common.constant.RedisConstants;
-import common.dto.response.ApiResponse;
-import common.dto.response.ApiUtils;
-import common.utils.BCryptUtil;
-import common.utils.EmailSendUtils;
-import common.utils.RegexUtils;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.utils.crypto.BCryptUtils;
+import com.bit.common.utils.ict.EmailSendUtils;
+import com.bit.common.utils.verify.RegexUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +18,14 @@ import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import com.bit.auth.entity.UserInfo;
-import commons.enums.EmailTemplateEnum;
 
 import java.time.Duration;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import static com.bit.common.core.constant.redis.RedisConstants.*;
+import static com.bit.common.core.enums.EmailTemplateEnum.VERIFICATION_CODE_EMAIL_HTML;
 
 /**
  * @Datetime: 2025年04月02日10:35
@@ -63,7 +63,7 @@ public class EmailCaptchaServiceImpl implements CaptchaService {
         }
 
         // 4. 频率限制校验
-        String rateLimitKey = RedisConstants.CAPTCHA_RATE_LIMIT_PREFIX + email;
+        String rateLimitKey = CAPTCHA_RATE_LIMIT_PREFIX + email;
         Long requestCount = stringRedisTemplate.opsForValue().increment(rateLimitKey);
         stringRedisTemplate.expire(rateLimitKey, 1, TimeUnit.HOURS);
         if (requestCount != null && requestCount > 10) {
@@ -72,7 +72,7 @@ public class EmailCaptchaServiceImpl implements CaptchaService {
         }
 
         // 5. 校验是否短时间内重复请求验证码,,使用 exists 命令直接判断 key 是否存在.
-        String captchaKey = RedisConstants.CAPTCHA_EMAIL_PREFIX + email;
+        String captchaKey = CAPTCHA_EMAIL_PREFIX + email;
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(captchaKey))) {
             log.info("邮箱 {} 验证码仍在有效期内", email);
             return false;
@@ -84,12 +84,12 @@ public class EmailCaptchaServiceImpl implements CaptchaService {
 
         try {
             // 7. 存储验证码（原子操作）
-            stringRedisTemplate.opsForValue().set(captchaKey, captcha, RedisConstants.CAPTCHA_EMAIL_TTL, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set(captchaKey, captcha, CAPTCHA_EMAIL_TTL, TimeUnit.MINUTES);
 
             // 8. 异步发送邮件
             CompletableFuture.runAsync(() -> {
-                String subject = EmailTemplateEnum.VERIFICATION_CODE_EMAIL_HTML.getSubject();
-                String content = EmailTemplateEnum.VERIFICATION_CODE_EMAIL_HTML.set(captcha);
+                String subject = VERIFICATION_CODE_EMAIL_HTML.getSubject();
+                String content = VERIFICATION_CODE_EMAIL_HTML.set(captcha);
                 boolean sendSuccess = emailSendUtils.sendHtmlEmail(subject, content, email);
                 // 9. 如果发送失败，清除验证码记录.
                 if (!sendSuccess) {
@@ -112,15 +112,15 @@ public class EmailCaptchaServiceImpl implements CaptchaService {
     public ApiResponse<String> loginOrRegister(String email, String password, String captcha, HttpSession session) {
         // 3. 校验邮箱是否合法
         if (RegexUtils.isEmailInvalid(email)){
-            return ApiUtils.error("邮箱格式错误");
+            return ApiResponse.error("邮箱格式错误");
         }
         // 4. 从redis中获取验证码,并判断非空且验证码正确.
-        String rightCaptcha = stringRedisTemplate.opsForValue().get(RedisConstants.CAPTCHA_EMAIL_PREFIX + email);
+        String rightCaptcha = stringRedisTemplate.opsForValue().get(CAPTCHA_EMAIL_PREFIX + email);
         if (rightCaptcha == null){
-            return ApiUtils.error("验证码已过期");
+            return ApiResponse.error("验证码已过期");
         }
         if (!captcha.equals(rightCaptcha)){
-            return ApiUtils.error("验证码错误");
+            return ApiResponse.error("验证码错误");
         }
         // 5. 检查用户是否存在。
         QueryWrapper <UserInfo> queryWrapper = new QueryWrapper<>();
@@ -131,31 +131,31 @@ public class EmailCaptchaServiceImpl implements CaptchaService {
             userInfo = new UserInfo();
             userInfo.setUsername(RandomUtil.randomString(10));
             userInfo.setEmail(email);
-            userInfo.setPassword(BCryptUtil.encode(password));
+            userInfo.setPassword(BCryptUtils.encode(password));
             userInfo.setLoginCount(1);
             userInfo.setCreatedAt(new Date());
             userInfoService.save(userInfo);
         } else{
             // 7. 在密码校验前添加防暴力破解
-            String attemptKey = RedisConstants.LOGIN_ATTEMPT_PREFIX + email;
+            String attemptKey = LOGIN_ATTEMPT_PREFIX + email;
             Long attempts = stringRedisTemplate.opsForValue().increment(attemptKey);
             if (attempts > 5) {
                 stringRedisTemplate.expire(attemptKey, 1, TimeUnit.HOURS);
-                return ApiUtils.error("密码错误次数过多，账户已锁定，请1小时后重试");
+                return ApiResponse.error("密码错误次数过多，账户已锁定，请1小时后重试");
             }
             // 8. 用户存在校验密码
-            boolean matchesResult = BCryptUtil.matches(password, userInfo.getPassword());
+            boolean matchesResult = BCryptUtils.matches(password, userInfo.getPassword());
             if (!matchesResult){
-                return ApiUtils.error("密码错误");
+                return ApiResponse.error("密码错误");
             }
             // 9. 登录成功后重置计数器
             stringRedisTemplate.delete(attemptKey);
         }
         // 10. 登录成功，将用户信息存入 redis 中.
         String token =  JWT.create().setPayload("userKey",email).setSigner(JWTSignerUtil.none()).sign();
-        stringRedisTemplate.opsForValue().set(RedisConstants.USER_INFO_PREFIX+token, JSONUtil.toJsonStr(userInfo), Duration.ofHours(1));
-        stringRedisTemplate.delete(RedisConstants.CAPTCHA_EMAIL_PREFIX + email);
-        return ApiUtils.success(token,"登录成功");
+        stringRedisTemplate.opsForValue().set(USER_INFO_PREFIX+token, JSONUtil.toJsonStr(userInfo), Duration.ofHours(1));
+        stringRedisTemplate.delete(CAPTCHA_EMAIL_PREFIX + email);
+        return ApiResponse.success(token,"登录成功");
     }
 
 }

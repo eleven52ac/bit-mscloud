@@ -34,16 +34,31 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
-        <!-- bit-common -->
+        <!-- bit-common-core -->
         <dependency>
             <groupId>bit</groupId>
-            <artifactId>bit-common</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-security</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>bit-common-core</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- bit-common-utils -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-utils</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-database</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-security</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
         <!-- lombok -->
         <dependency>
@@ -61,6 +76,12 @@
             <groupId>bit</groupId>
             <artifactId>bit-api-user</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
 
 

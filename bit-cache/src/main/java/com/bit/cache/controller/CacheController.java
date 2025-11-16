@@ -4,8 +4,7 @@ import com.bit.cache.dto.request.PersonRequest;
 import com.bit.cache.dto.response.PersonResponse;
 import com.bit.cache.service.PersonInfoService;
 import com.bit.cache.service.PersonsInfoService;
-import common.dto.response.ApiResponse;
-import common.dto.response.ApiUtils;
+import com.bit.common.core.dto.response.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class CacheController {
                                           @RequestParam(name = "pageSize", defaultValue = "10", required = false) Integer pageSize,
                                           @RequestParam(name = "orderBy", required = false) String orderBy){
         List<PersonResponse> response = personsInfoService.getPersonsInfoList(name,pageNum, pageSize, orderBy);
-        return ApiUtils.success(response,response.size()+"");
+        return ApiResponse.success(response,response.size()+"");
     }
 
     /**
@@ -61,9 +60,9 @@ public class CacheController {
     public ApiResponse getPersonNoCache(@RequestParam(name = "id") Long id){
         try{
             PersonResponse response = personsInfoService.getPersonWithoutCache(id);
-            return ApiUtils.success(response,"获取人员信息成功");
+            return ApiResponse.success(response,"获取人员信息成功");
         }catch (Exception e){
-            return ApiUtils.error( e.getMessage(),"获取人员信息失败");
+            return ApiResponse.error( e.getMessage(),"获取人员信息失败");
         }
     }
 
@@ -78,9 +77,9 @@ public class CacheController {
     public ApiResponse getPersonNoCacheButReadOnly(@RequestParam(name = "id") Long id){
         try{
             PersonResponse response = personsInfoService.getPersonWithoutCacheButReadOnly(id);
-            return ApiUtils.success(response,"获取人员信息成功");
+            return ApiResponse.success(response,"获取人员信息成功");
         }catch (Exception e){
-            return ApiUtils.error( e.getMessage(),"获取人员信息失败");
+            return ApiResponse.error( e.getMessage(),"获取人员信息失败");
         }
     }
 
@@ -93,9 +92,9 @@ public class CacheController {
     public ApiResponse getPersonCache(@RequestParam(name = "id") Long id){
         try{
             PersonResponse response = personsInfoService.getPersonWithCache(id);
-            return ApiUtils.success(response,"获取人员信息成功");
+            return ApiResponse.success(response,"获取人员信息成功");
         }catch (Exception e){
-            return ApiUtils.error( e.getMessage(),"获取人员信息失败");
+            return ApiResponse.error( e.getMessage(),"获取人员信息失败");
         }
     }
 
@@ -108,9 +107,9 @@ public class CacheController {
     public ApiResponse getPersonLocalCache(@RequestParam(name = "id") Long id){
         try{
             PersonResponse response = personsInfoService.getPersonWithLocalCache(id, personLocalCache);
-            return ApiUtils.success(response,"获取人员信息成功");
+            return ApiResponse.success(response,"获取人员信息成功");
         }catch (Exception e){
-            return ApiUtils.error( e.getMessage(),"获取人员信息失败");
+            return ApiResponse.error( e.getMessage(),"获取人员信息失败");
         }
     }
 
@@ -124,7 +123,7 @@ public class CacheController {
         try{
             return personsInfoService.updateBYCacheAsidePattern(request);
         }catch (Exception e){
-            return ApiUtils.error( e.getMessage(),"更新人员信息失败");
+            return ApiResponse.error( e.getMessage(),"更新人员信息失败");
         }
     }
 
@@ -137,7 +136,7 @@ public class CacheController {
         try{
             return personInfoService.cacheBreakdownPattern(id);
         }catch (Exception e){
-            return ApiUtils.error( e.getMessage(),"缓存 breakdown 失败");
+            return ApiResponse.error( e.getMessage(),"缓存 breakdown 失败");
         }
     }
 
@@ -145,7 +144,7 @@ public class CacheController {
     @PostMapping("/person/count")
     public ApiResponse getDataCount(@RequestParam("count") Integer count){
         log.info("当前数据量：{}", count);
-        return ApiUtils.success(count);
+        return ApiResponse.success(count);
     }
 
 }

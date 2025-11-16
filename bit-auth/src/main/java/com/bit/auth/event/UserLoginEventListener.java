@@ -2,10 +2,10 @@ package com.bit.auth.event;
 
 import com.bit.auth.config.InternalTokenContext;
 import com.bit.auth.message.MessageService;
+import com.bit.common.core.context.ClientMetaInfo;
 import com.bit.user.api.model.UserInfoEntity;
 import com.bit.user.api.model.UserLoginHistoryEntity;
 import com.bit.user.api.service.UserLoginHistoryFeignClient;
-import common.dto.reuqest.ClientMetaInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;

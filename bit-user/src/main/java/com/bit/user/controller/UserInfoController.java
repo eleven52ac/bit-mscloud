@@ -1,8 +1,8 @@
 package com.bit.user.controller;
 
+import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.user.entity.UserInfoEntity;
 import com.bit.user.service.UserInfoService;
-import common.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

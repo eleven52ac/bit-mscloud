@@ -1,9 +1,9 @@
 package com.bit.other.controller;
 
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.utils.core.SnowflakeIdGenerator;
 import com.bit.other.entity.SnowflakeRecord;
 import com.bit.other.service.SnowflakeRecordService;
-import common.dto.response.ApiResponse;
-import common.utils.core.SnowflakeIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

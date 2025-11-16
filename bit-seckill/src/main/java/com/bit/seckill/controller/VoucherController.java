@@ -1,14 +1,13 @@
 package com.bit.seckill.controller;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.bit.common.security.annotation.CheckLogin;
 import com.bit.seckill.dto.request.VoucherRequest;
 import com.bit.seckill.service.SeckillVoucherService;
 import com.bit.seckill.service.VoucherOrderService;
 import com.bit.seckill.service.VoucherService;
-import common.annotation.CheckLogin;
-import common.annotation.EncryptCheck;
-import common.dto.response.ApiResponse;
-import common.dto.response.ApiUtils;
+import com.bit.common.core.dto.response.ApiResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,13 +36,13 @@ public class VoucherController {
      * @return
      */
     @PostMapping("/add/seckill")
-    @EncryptCheck
+    //@EncryptCheck
     public ApiResponse addSeckillVoucher(VoucherRequest request) {
         boolean result = voucherService.addSeckillVoucher(request);
         if (result) {
-            return ApiUtils.success( "添加成功");
+            return ApiResponse.success( "添加成功");
         }
-         return ApiUtils.error( "添加失败");
+         return ApiResponse.error( "添加失败");
     }
 
 
@@ -56,10 +55,10 @@ public class VoucherController {
     @GetMapping("/order/seckill")
     public ApiResponse orderseckillVoucher(@RequestParam("voucherId") Long voucherId){
         try{
-            if (ObjectUtil.isEmpty(voucherId)) return ApiUtils.error( "参数错误");
+            if (ObjectUtil.isEmpty(voucherId)) return ApiResponse.error( "参数错误");
             return voucherOrderService.orderSeckillVoucherStandAloneDeploymentVersion(voucherId);
         }catch (Exception e){
-            return ApiUtils.error( e.getMessage(),"秒杀券下单失败");
+            return ApiResponse.error( e.getMessage(),"秒杀券下单失败");
         }
     }
 

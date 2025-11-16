@@ -1,6 +1,5 @@
 package msgateway.filter;
 
-import common.constant.SaltConstants;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -13,6 +12,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import static com.bit.common.core.constant.security.SaltConstants.INTERNAL_AUTH_TOKEN_SECRET;
+
 /**
  * @Datetime: 2025年11月06日17:22
  * @Author: Eleven52AC
@@ -22,7 +23,7 @@ import java.util.Base64;
 public class InternalAuthTokenFilter implements GlobalFilter, Ordered {
 
     // 令牌密钥
-    private static final String SECRET = SaltConstants.INTERNAL_AUTH_TOKEN_SECRET;
+    private static final String SECRET = INTERNAL_AUTH_TOKEN_SECRET;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

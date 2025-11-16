@@ -3,8 +3,8 @@ package com.bit.auth;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
+import com.bit.common.core.constant.security.SaltConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import common.constant.SaltConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

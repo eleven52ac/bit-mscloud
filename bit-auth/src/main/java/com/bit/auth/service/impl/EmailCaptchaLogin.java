@@ -2,9 +2,10 @@ package com.bit.auth.service.impl;
 
 import com.bit.auth.dto.request.TokenRequest;
 import com.bit.auth.service.LoginStrategy;
-import common.dto.response.ApiResponse;
-import common.dto.reuqest.ClientMetaInfo;
-import common.enums.LoginTypeEnum;
+import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.core.enums.LoginTypeEnum;
+
 
 /**
  * @Datetime: 2025年11月08日15:26

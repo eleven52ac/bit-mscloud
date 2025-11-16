@@ -1,5 +1,6 @@
 package msgateway.filter;
 
+import com.bit.common.utils.log.AccessLogUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -27,8 +28,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Optional;
-
-import common.log.AccessLogFormatter;
 
 @Slf4j
 @Component
@@ -80,7 +79,7 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
                                     Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
                                     URI targetUri = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR);
 
-                                    ACCESS_LOG.info(AccessLogFormatter.formatRequestLog(
+                                    ACCESS_LOG.info(AccessLogUtils.formatRequestLog(
                                             method, uri, query, requestBody,
                                             route != null ? route.getId() : "unknown",
                                             targetUri != null ? targetUri.toString() : "unknown",

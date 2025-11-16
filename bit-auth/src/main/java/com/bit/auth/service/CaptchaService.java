@@ -1,7 +1,7 @@
 package com.bit.auth.service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import common.dto.response.ApiResponse;
+import com.bit.common.core.dto.response.ApiResponse;
 import jakarta.servlet.http.HttpSession;
 
 /**

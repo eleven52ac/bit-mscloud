@@ -1,8 +1,9 @@
 package com.bit.seckill.service;
 
+import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.seckill.entity.VoucherOrderEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
-import common.dto.response.ApiResponse;
+
 
 /**
 * @author camel

@@ -3,7 +3,7 @@ package com.bit.cache.service;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.bit.cache.entity.PersonInfoEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
-import common.dto.response.ApiResponse;
+import com.bit.common.core.dto.response.ApiResponse;
 
 /**
 * @author camellia

@@ -3,16 +3,16 @@ package com.bit.auth.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.bit.auth.dto.request.TokenRequest;
 import com.bit.auth.service.RegisterStrategy;
+import com.bit.common.core.constant.redis.RedisConstants.*;
+import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.core.enums.RegisterTypeEnum;
+import com.bit.common.utils.core.IdGenerator;
+import com.bit.common.utils.crypto.BCryptUtils;
+import com.bit.common.utils.jwt.JwtUtils;
+import com.bit.common.utils.verify.RegexUtils;
 import com.bit.user.api.model.UserInfoEntity;
 import com.bit.user.api.service.UserInfoFeignClient;
-import common.constant.RedisConstants;
-import common.dto.response.ApiResponse;
-import common.dto.reuqest.ClientMetaInfo;
-import common.enums.RegisterTypeEnum;
-import common.utils.BCryptUtil;
-import common.utils.RegexUtils;
-import common.utils.core.IdGenerator;
-import common.utils.jwt.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static common.constant.RedisConstants.*;
-import static common.dto.response.ApiResponse.isFail;
+import static com.bit.common.core.constant.redis.RedisConstants.*;
+import static com.bit.common.core.dto.response.ApiResponse.isFail;
 
 /**
  * @Datetime: 2025年11月09日17:25
@@ -193,7 +193,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
             return ApiResponse.success("IP信息缺失，跳过限流");
         }
         String ip = clientInfo.getIp();
-        String ipRateLimitKey = RedisConstants.CAPTCHA_IP_RATE_LIMIT_PREFIX + ip;
+        String ipRateLimitKey = CAPTCHA_IP_RATE_LIMIT_PREFIX + ip;
         try {
             Long count = stringRedisTemplate.execute(
                     RATE_LIMIT_SCRIPT,
@@ -261,7 +261,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
      * @return
      */
     private ApiResponse<String> validateCaptcha(String email, String captcha) {
-        String key = RedisConstants.CAPTCHA_EMAIL_PREFIX + email;
+        String key = CAPTCHA_EMAIL_PREFIX + email;
         try{
             String rightCaptcha = stringRedisTemplate.opsForValue().get(key);
             if (ObjectUtils.isEmpty(rightCaptcha)){
@@ -270,14 +270,14 @@ public class EmailCaptchaRegister implements RegisterStrategy {
             // 比较验证码（不区分大小写）
             if (!captcha.equalsIgnoreCase(rightCaptcha)) {
                 // 累计错误次数
-                String errorKey = RedisConstants.CAPTCHA_ERROR_ATTEMPTS_PREFIX + email;
+                String errorKey = CAPTCHA_ERROR_ATTEMPTS_PREFIX + email;
                 Long errorCount = stringRedisTemplate.opsForValue().increment(errorKey);
                 if (errorCount != null && errorCount.equals(1L)) {
                     stringRedisTemplate.expire(errorKey, 10, TimeUnit.MINUTES); // 错误计数10分钟过期
                 }
                 if (errorCount >= 3L) {
                     stringRedisTemplate.delete(key);
-                    stringRedisTemplate.delete(RedisConstants.CAPTCHA_ERROR_ATTEMPTS_PREFIX + email);
+                    stringRedisTemplate.delete(CAPTCHA_ERROR_ATTEMPTS_PREFIX + email);
                     return ApiResponse.badRequest("验证码错误次数过多，请重新获取验证码。");
                 }
                 return ApiResponse.error("验证码错误");
@@ -285,7 +285,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
             // 验证成功，删除验证码。
             stringRedisTemplate.delete(key);
             // 同时删除错误计数
-            stringRedisTemplate.delete(RedisConstants.CAPTCHA_ERROR_ATTEMPTS_PREFIX + email);
+            stringRedisTemplate.delete(CAPTCHA_ERROR_ATTEMPTS_PREFIX + email);
             return ApiResponse.success("验证码验证成功");
         }catch (RedisConnectionFailureException e) {
             log.error("Redis连接异常，验证码校验失败: {}", e.getMessage());
@@ -296,7 +296,6 @@ public class EmailCaptchaRegister implements RegisterStrategy {
     /**
      *
      * @param request
-     * @param userId
      * @return
      * @Author: Eleven52AC
      * @Description: 创建用户
@@ -308,7 +307,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
             UserInfoEntity userInfo = new UserInfoEntity()
                     .setUserId(userId)
                     .setUsername(request.getUsername())
-                    .setPassword(BCryptUtil.encode(request.getPassword()))
+                    .setPassword(BCryptUtils.encode(request.getPassword()))
                     .setEmail(request.getEmail())
                     .setCreatedAt(now)
                     .setLastLogin(now)
@@ -325,7 +324,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
                     "userId", userId.toString(),
                     "email", request.getEmail()
             );
-            String token = JwtUtil.generateToken(claims);
+            String token = JwtUtils.generateToken(claims);
 
             // 存入 Redis（按用户ID维度，方便踢人/注销）
             String redisKey = USER_TOKEN_PREFIX + userId;

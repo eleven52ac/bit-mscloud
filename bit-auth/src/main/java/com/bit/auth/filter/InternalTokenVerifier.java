@@ -1,6 +1,6 @@
 package com.bit.auth.filter;
 
-import common.constant.SaltConstants;
+import com.bit.common.core.constant.security.SaltConstants;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

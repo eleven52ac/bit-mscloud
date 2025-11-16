@@ -1,6 +1,6 @@
 package com.bit.auth;
 
-import common.utils.HashUtils;
+import com.bit.common.utils.crypto.HashUtils;
 import org.junit.jupiter.api.Test;
 
 /**

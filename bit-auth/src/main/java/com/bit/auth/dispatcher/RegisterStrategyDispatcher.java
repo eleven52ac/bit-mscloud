@@ -2,9 +2,9 @@ package com.bit.auth.dispatcher;
 
 import com.bit.auth.dto.request.TokenRequest;
 import com.bit.auth.service.RegisterStrategy;
-import common.dto.response.ApiResponse;
-import common.dto.reuqest.ClientMetaInfo;
-import common.enums.RegisterTypeEnum;
+import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.core.enums.RegisterTypeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

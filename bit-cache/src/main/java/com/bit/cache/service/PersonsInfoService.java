@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.bit.cache.dto.request.PersonRequest;
 import com.bit.cache.dto.response.PersonResponse;
 import com.bit.cache.entity.PersonsInfoEntity;
-import common.dto.response.ApiResponse;
+import com.bit.common.core.dto.response.ApiResponse;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;

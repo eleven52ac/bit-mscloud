@@ -14,7 +14,7 @@ import java.net.InetAddress;
 @EnableAsync
 @EnableFeignClients(basePackages = "com.bit.user.api.service")
 @EnableDiscoveryClient
-@SpringBootApplication(scanBasePackages = {"com.bit", "common"})
+@SpringBootApplication(scanBasePackages = {"com.bit"})
 public class BitAuthApplication {
 
     public static void main(String[] args) throws Exception {

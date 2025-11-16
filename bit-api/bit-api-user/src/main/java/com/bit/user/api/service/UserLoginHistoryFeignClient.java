@@ -1,8 +1,7 @@
 package com.bit.user.api.service;
 
-import com.bit.user.api.model.UserInfoEntity;
+import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.user.api.model.UserLoginHistoryEntity;
-import common.dto.response.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +32,6 @@ public interface UserLoginHistoryFeignClient {
      *
      * @Author: Eleven52AC
      * @Description:
-     * @param userId
      * @param record
      */
     @PostMapping("/save")

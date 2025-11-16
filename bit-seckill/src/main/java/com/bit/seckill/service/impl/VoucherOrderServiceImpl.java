@@ -3,17 +3,16 @@ package com.bit.seckill.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bit.common.core.context.UserContext;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.utils.core.SnowflakeIdGenerator;
+import com.bit.common.utils.redis.RedisLock;
 import com.bit.seckill.entity.SeckillVoucherEntity;
 import com.bit.seckill.entity.VoucherOrderEntity;
 import com.bit.seckill.mapper.VoucherOrderMapper;
 import com.bit.seckill.service.SeckillVoucherService;
 import com.bit.seckill.service.VoucherOrderService;
 
-import common.dto.response.ApiResponse;
-import common.dto.response.ApiUtils;
-import common.utils.RedisLock;
-import common.utils.core.SnowflakeIdGenerator;
-import common.utils.UserThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -25,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-import static common.constant.RedisConstants.SECKILL_LOCK_PREFIX;
+import static com.bit.common.core.constant.redis.RedisConstants.SECKILL_LOCK_PREFIX;
 
 
 /**
@@ -58,24 +57,24 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
      * @描述： 采用乐(CAS)观锁解决超卖问题，悲观锁处理一人一单问题。适用于单个服务部署，分布式不适用。
      */
     @Override
-    public ApiResponse orderSeckillVoucherStandAloneDeploymentVersion(Long voucherId) {
+    public ApiResponse<?> orderSeckillVoucherStandAloneDeploymentVersion(Long voucherId) {
         // 1. 获取用户ID（必须放在事务外）
-        Long userId = Long.valueOf(UserThreadLocal.getUserInfo().getUserId());
+        Long userId = Long.valueOf(UserContext.getCurrentUser().getUserId());
         // 2. 查询优惠券（只查必要字段）
         SeckillVoucherEntity voucher = seckillVoucherService.lambdaQuery()
                 .select(SeckillVoucherEntity::getBeginTime, SeckillVoucherEntity::getEndTime)
                 .eq(SeckillVoucherEntity::getVoucherId, voucherId)
                 .one();
         if (ObjectUtil.isEmpty(voucher)) {
-            return ApiUtils.error(404, "优惠券不存在");
+            return ApiResponse.error(404, "优惠券不存在");
         }
         // 3. 秒杀时间判断
         Date now = new Date();
         if (now.before(voucher.getBeginTime())) {
-            return ApiUtils.error(400, "秒杀尚未开始");
+            return ApiResponse.error(400, "秒杀尚未开始");
         }
         if (now.after(voucher.getEndTime())) {
-            return ApiUtils.error(400, "秒杀已结束");
+            return ApiResponse.error(400, "秒杀已结束");
         }
         // 4. 同步锁（防止并发下“一人一单”校验穿透）
         synchronized (userId.toString().intern()) { // todo：锁住用户ID，intern 避免字符串重复创建
@@ -95,31 +94,31 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
      * @描述： 采用乐观锁解决订单超卖问题，采用Redis锁解决分布式场景下的一人一单问题。
      */
     @Override
-    public ApiResponse orderSeckillVoucherDistributedVersion(Long voucherId) {
+    public ApiResponse<?> orderSeckillVoucherDistributedVersion(Long voucherId) {
         // 1. 获取用户ID（必须放在事务外）
-        Long userId = Long.valueOf(UserThreadLocal.getUserInfo().getUserId());
+        Long userId = Long.valueOf(UserContext.getCurrentUser().getUserId());
         // 2. 查询优惠券（只查必要字段）
         SeckillVoucherEntity voucher = seckillVoucherService.lambdaQuery()
                 .select(SeckillVoucherEntity::getBeginTime, SeckillVoucherEntity::getEndTime)
                 .eq(SeckillVoucherEntity::getVoucherId, voucherId)
                 .one();
         if (ObjectUtil.isEmpty(voucher)) {
-            return ApiUtils.error(404, "优惠券不存在");
+            return ApiResponse.error(404, "优惠券不存在");
         }
         // 3. 秒杀时间判断
         Date now = new Date();
         if (now.before(voucher.getBeginTime())) {
-            return ApiUtils.error(400, "秒杀尚未开始");
+            return ApiResponse.error(400, "秒杀尚未开始");
         }
         if (now.after(voucher.getEndTime())) {
-            return ApiUtils.error(400, "秒杀已结束");
+            return ApiResponse.error(400, "秒杀已结束");
         }
         // 4. 分布式锁（防止并发下“一人一单”校验穿透）
         RedisLock lock = new RedisLock(stringRedisTemplate, SECKILL_LOCK_PREFIX + userId);
         // 5. 尝试获取锁
         boolean isLock = lock.tryLock(1000);
         if (!isLock) {
-            return ApiUtils.error(400, "请勿重复下单");
+            return ApiResponse.error(400, "请勿重复下单");
         }
         try {
             // 6. 获取代理对象（事务）
@@ -127,7 +126,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return proxy.createOrder(voucherId, userId);
         }catch (Exception e){
             log.error("【秒杀下单异常】voucherId={}, userId={}", voucherId, userId, e);
-            return ApiUtils.error(500, "服务器异常");
+            return ApiResponse.error(500, "服务器异常");
         }finally {
             // 7.释放锁
             lock.unLock();
@@ -143,29 +142,29 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Override
     public ApiResponse orderSeckillVoucherRessionVersion(Long voucherId) {
         // 1. 获取用户ID（必须放在事务外）
-        Long userId = Long.valueOf(UserThreadLocal.getUserInfo().getUserId());
+        Long userId = Long.valueOf(UserContext.getCurrentUser().getUserId());
         // 2. 查询优惠券（只查必要字段）
         SeckillVoucherEntity voucher = seckillVoucherService.lambdaQuery()
                 .select(SeckillVoucherEntity::getBeginTime, SeckillVoucherEntity::getEndTime)
                 .eq(SeckillVoucherEntity::getVoucherId, voucherId)
                 .one();
         if (ObjectUtil.isEmpty(voucher)) {
-            return ApiUtils.error(404, "优惠券不存在");
+            return ApiResponse.error(404, "优惠券不存在");
         }
         // 3. 秒杀时间判断
         Date now = new Date();
         if (now.before(voucher.getBeginTime())) {
-            return ApiUtils.error(400, "秒杀尚未开始");
+            return ApiResponse.error(400, "秒杀尚未开始");
         }
         if (now.after(voucher.getEndTime())) {
-            return ApiUtils.error(400, "秒杀已结束");
+            return ApiResponse.error(400, "秒杀已结束");
         }
         // 4. 分布式锁（防止并发下“一人一单”校验穿透）
         RLock lock = redissonClient.getLock(SECKILL_LOCK_PREFIX + userId);
         // 5. 尝试获取锁
         boolean isLock = lock.tryLock();
         if (!isLock) {
-            return ApiUtils.error(400, "请勿重复下单");
+            return ApiResponse.error(400, "请勿重复下单");
         }
         try {
             // 6. 获取代理对象（事务）
@@ -173,7 +172,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return proxy.createOrder(voucherId, userId);
         }catch (Exception e){
             log.error("【秒杀下单异常】voucherId={}, userId={}", voucherId, userId, e);
-            return ApiUtils.error(500, "服务器异常");
+            return ApiResponse.error(500, "服务器异常");
         }finally {
             // 7.释放锁
             lock.unlock();
@@ -192,7 +191,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
                 .eq("voucher_id", voucherId)
                 .count() > 0;
         if (alreadyOrdered) {
-            return ApiUtils.error(400, "您已经抢购过一次了");
+            return ApiResponse.error(400, "您已经抢购过一次了");
         }
         // 6. 扣减库存（乐观锁）
         boolean stockUpdated = seckillVoucherService.update()
@@ -201,7 +200,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
                 .gt("stock", 0)
                 .update();
         if (!stockUpdated) {
-            return ApiUtils.error(400, "库存不足");
+            return ApiResponse.error(400, "库存不足");
         }
         // 7. 构建订单并保存
         try {
@@ -217,10 +216,10 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             if (!this.save(order)) {
                 throw new RuntimeException("订单创建失败");
             }
-            return ApiUtils.success(order.getId());
+            return ApiResponse.success(order.getId());
         } catch (Exception e) {
             // todo：可加入库存补偿机制，如MQ异步恢复库存
-            return ApiUtils.error(500, "系统繁忙，请重试");
+            return ApiResponse.error(500, "系统繁忙，请重试");
         }
     }
 }

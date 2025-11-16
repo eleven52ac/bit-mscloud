@@ -1,8 +1,8 @@
 package com.bit.auth.message;
 
+import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.utils.ict.EmailSendUtils;
 import com.bit.user.api.model.UserInfoEntity;
-import common.dto.reuqest.ClientMetaInfo;
-import common.utils.EmailSendUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;

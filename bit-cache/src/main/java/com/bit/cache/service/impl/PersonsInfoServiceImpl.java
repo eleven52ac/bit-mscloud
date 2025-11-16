@@ -1,6 +1,4 @@
 package com.bit.cache.service.impl;
-
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,23 +11,22 @@ import com.bit.cache.entity.PersonsInfoEntity;
 import com.bit.cache.mapper.PersonInfoMapper;
 import com.bit.cache.mapper.PersonsInfoMapper;
 import com.bit.cache.service.PersonsInfoService;
-import common.constant.RedisConstants;
-import common.dto.response.ApiResponse;
-import common.dto.response.ApiUtils;
-import common.utils.IdCardUtil;
+import com.bit.common.core.dto.response.ApiResponse;
+import com.bit.common.utils.identity.IdCardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.bit.common.core.constant.redis.RedisConstants.PERSON_INFO_PREFIX;
 
 /**
 * @author camel
@@ -94,7 +91,7 @@ public class PersonsInfoServiceImpl extends ServiceImpl<PersonsInfoMapper, Perso
      */
     @Override
     public PersonResponse getPersonWithCache(Long id) {
-        String key = RedisConstants.PERSON_INFO_PREFIX + id;
+        String key = PERSON_INFO_PREFIX + id;
         String personJson = stringRedisTemplate.opsForValue().get(key);
         // 1. 命中缓存
         if (StrUtil.isNotBlank(personJson)) {
@@ -163,16 +160,16 @@ public class PersonsInfoServiceImpl extends ServiceImpl<PersonsInfoMapper, Perso
             boolean result = personInfoMapper.insertOrUpdate(entity);
             if (result) {
                 // 2. 然后立即把相关缓存删掉
-                stringRedisTemplate.delete(RedisConstants.PERSON_INFO_PREFIX + request.getId());
+                stringRedisTemplate.delete(PERSON_INFO_PREFIX + request.getId());
                 // 3. 延迟一段时间后再次删除
                 ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
                 executor.schedule(() -> {
-                    stringRedisTemplate.delete(RedisConstants.PERSON_INFO_PREFIX + request.getId());
+                    stringRedisTemplate.delete(PERSON_INFO_PREFIX + request.getId());
                 }, 500, TimeUnit.MILLISECONDS);
-                return ApiUtils.success(request,"更新成功");
-            }else return ApiUtils.error("更新失败");
+                return ApiResponse.success(request,"更新成功");
+            }else return ApiResponse.error("更新失败");
         }catch (Exception e){
-            return ApiUtils.error( e.getMessage(),"更新失败");
+            return ApiResponse.error( e.getMessage(),"更新失败");
         }
     }
 
@@ -188,10 +185,10 @@ public class PersonsInfoServiceImpl extends ServiceImpl<PersonsInfoMapper, Perso
             PersonResponse personDto = new PersonResponse.Builder()
                     .id(record.getPersonId())
                     .name(record.getPersonName())
-                    .age(IdCardUtil.getAge(record.getCardNumber()))
-                    .birthday(IdCardUtil.getBirthday(record.getCardNumber()).toString())
-                    .gender(IdCardUtil.getGender(record.getCardNumber()))
-                    .register(IdCardUtil.getAddress(record.getCardNumber()))
+                    .age(IdCardUtils.getAge(record.getCardNumber()))
+                    .birthday(IdCardUtils.getBirthday(record.getCardNumber()).toString())
+                    .gender(IdCardUtils.getGender(record.getCardNumber()))
+                    .register(IdCardUtils.getAddress(record.getCardNumber()))
                     .build();
             return personDto;
         }).collect(Collectors.toList());
@@ -201,10 +198,10 @@ public class PersonsInfoServiceImpl extends ServiceImpl<PersonsInfoMapper, Perso
         return new PersonResponse(
                 entity.getPersonId(),
                 entity.getPersonName(),
-                IdCardUtil.getAge(entity.getCardNumber()),
-                IdCardUtil.getBirthday(entity.getCardNumber()).toString(),
-                IdCardUtil.getGender(entity.getCardNumber()),
-                IdCardUtil.getAddress(entity.getCardNumber()));
+                IdCardUtils.getAge(entity.getCardNumber()),
+                IdCardUtils.getBirthday(entity.getCardNumber()).toString(),
+                IdCardUtils.getGender(entity.getCardNumber()),
+                IdCardUtils.getAddress(entity.getCardNumber()));
     }
 
     private PersonInfoEntity disposeData(PersonRequest request){
