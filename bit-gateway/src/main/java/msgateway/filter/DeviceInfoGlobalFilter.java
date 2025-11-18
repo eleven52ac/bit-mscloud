@@ -1,7 +1,7 @@
 package msgateway.filter;
 
-import com.bit.common.utils.http.WebFluxDeviceInfoUtils;
-import com.bit.common.utils.http.context.DeviceInfo;
+import com.bit.common.web.context.DeviceInfo;
+import com.bit.common.web.utils.http.WebFluxDeviceInfoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

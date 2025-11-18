@@ -1,4 +1,4 @@
-package com.bit.common.core.enums;
+package com.bit.common.core.enums.biz;
 
 public enum PdfTypeEnum {
 

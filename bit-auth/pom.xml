@@ -34,13 +34,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
-        <!-- bit-common-core -->
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-core</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- bit-common-utils -->
         <dependency>
             <groupId>bit</groupId>
@@ -76,6 +69,13 @@
             <groupId>bit</groupId>
             <artifactId>bit-api-user</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <!-- bit-common-web -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-web</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>bit</groupId>

@@ -22,12 +22,12 @@ public class ApiResponse<T> {
     /**
      * 状态码
      */
-    private int status;
+    private int code;
 
     /**
      * 返回信息
      */
-    private String message;
+    private String msg;
 
     /**
      * 返回的数据
@@ -48,31 +48,31 @@ public class ApiResponse<T> {
 
     /**
      * 只传入状态码，自动设置时间戳
-     * @param status
+     * @param code
      */
-    public ApiResponse(int status) {
-        this(status, null, null);
+    public ApiResponse(int code) {
+        this(code, null, null);
     }
 
     /**
      * 传入状态码和数据，自动设置时间戳
-     * @param status
+     * @param code
      * @param data
      */
-    public ApiResponse(int status, T data) {
-        this(status, data, null);
+    public ApiResponse(int code, T data) {
+        this(code, data, null);
     }
 
     /**
      * 传入状态码、数据和消息，自动设置时间戳
-     * @param status
+     * @param code
      * @param data
-     * @param message
+     * @param msg
      */
-    public ApiResponse(int status, T data, String message) {
-        this.status = status;
+    public ApiResponse(int code, T data, String msg) {
+        this.code = code;
         this.data = data;
-        this.message = message;
+        this.msg = msg;
         this.timestamp = LocalDateTime.now();
     }
 
@@ -84,7 +84,7 @@ public class ApiResponse<T> {
      * @return
      */
     public static boolean isSuccess(ApiResponse<?> response) {
-        return response != null && (response.status == ApiStatus.SUCCESS);
+        return response != null && (response.code == ApiStatus.SUCCESS);
     }
 
     /**
@@ -124,12 +124,12 @@ public class ApiResponse<T> {
      * 自定义消息成功返回的工具方法。
      *
      * @param data 响应的数据
-     * @param message 自定义的成功消息
+     * @param msg 自定义的成功消息
      * @param <T> 数据类型
      * @return 包含数据、状态码和自定义消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> success(T data, String message) {
-        return new ApiResponse<>(ApiStatus.SUCCESS, data, message);
+    public static <T> ApiResponse<T> success(T data, String msg) {
+        return new ApiResponse<>(ApiStatus.SUCCESS, data, msg);
     }
 
     /**
@@ -151,110 +151,110 @@ public class ApiResponse<T> {
      * @return 包含数据、总数、状态码和消息的 ApiResponse 对象
      */
     public static <T> ApiResponse<List<T>> successList(List<T> data, long total) {
-        String message = "请求成功，数据量: " + total;
-        return new ApiResponse<>(ApiStatus.SUCCESS, data, message);
+        String msg = "请求成功，数据量: " + total;
+        return new ApiResponse<>(ApiStatus.SUCCESS, data, msg);
     }
 
     /**
      * 错误返回的工具方法，带有状态码和消息。
      *
-     * @param status 错误状态码
-     * @param message 错误消息
+     * @param code 错误状态码
+     * @param msg 错误消息
      * @param <T> 数据类型
      * @return 包含状态码和错误消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> error(int status, String message) {
-        return new ApiResponse<>(status, null, message);
+    public static <T> ApiResponse<T> error(int code, String msg) {
+        return new ApiResponse<>(code, null, msg);
     }
 
     /**
      * 错误返回的工具方法，默认状态码 500 和错误消息。
      *
-     * @param message 错误消息
+     * @param msg 错误消息
      * @param <T> 数据类型
      * @return 包含状态码和错误消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> error(String message) {
-        return new ApiResponse<>(ApiStatus.INTERNAL_SERVER_ERROR, null, message);
+    public static <T> ApiResponse<T> error(String msg) {
+        return new ApiResponse<>(ApiStatus.INTERNAL_SERVER_ERROR, null, msg);
     }
 
     /**
      * 错误返回的工具方法，带有状态码、数据、消息。
      * @param data 返回的数据
-     * @param message 错误消息
+     * @param msg 错误消息
      * @return 包含状态码和消息的 ApiResponse 对象
      * @param <T> 数据类型
      */
-    public static <T> ApiResponse<T> error(T data, String message) {
-        return new ApiResponse<>(ApiStatus.INTERNAL_SERVER_ERROR, data, message);
+    public static <T> ApiResponse<T> error(T data, String msg) {
+        return new ApiResponse<>(ApiStatus.INTERNAL_SERVER_ERROR, data, msg);
     }
 
     /**
      * 未授权响应（状态码 401）。
      *
-     * @param message 错误消息
+     * @param msg 错误消息
      * @param <T> 数据类型
      * @return 包含状态码和消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> unauthorized(String message) {
-        return new ApiResponse<>(ApiStatus.UNAUTHORIZED, null, message);
+    public static <T> ApiResponse<T> unauthorized(String msg) {
+        return new ApiResponse<>(ApiStatus.UNAUTHORIZED, null, msg);
     }
 
     /**
      * 禁止访问响应（状态码 403）。
      *
-     * @param message 错误消息
+     * @param msg 错误消息
      * @param <T> 数据类型
      * @return 包含状态码和消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> forbidden(String message) {
-        return new ApiResponse<>(ApiStatus.FORBIDDEN, null, message);
+    public static <T> ApiResponse<T> forbidden(String msg) {
+        return new ApiResponse<>(ApiStatus.FORBIDDEN, null, msg);
     }
 
     /**
      * 客户端请求无效响应（状态码 400）。
      *
-     * @param message 错误消息
+     * @param msg 错误消息
      * @param <T> 数据类型
      * @return 包含状态码和消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> badRequest(String message) {
-        return new ApiResponse<>(ApiStatus.BAD_REQUEST, null, message);
+    public static <T> ApiResponse<T> badRequest(String msg) {
+        return new ApiResponse<>(ApiStatus.BAD_REQUEST, null, msg);
     }
 
     /**
      * 资源未找到响应（状态码 404）。
      *
-     * @param message 错误消息
+     * @param msg 错误消息
      * @param <T> 数据类型
      * @return 包含状态码和消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> notFound(String message) {
-        return new ApiResponse<>(ApiStatus.NOT_FOUND, null, message);
+    public static <T> ApiResponse<T> notFound(String msg) {
+        return new ApiResponse<>(ApiStatus.NOT_FOUND, null, msg);
     }
 
     /**
      * 服务器内部错误响应（状态码 500）。
      *
-     * @param message 错误消息
+     * @param msg 错误消息
      * @param <T> 数据类型
      * @return 包含状态码和消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> internalServerError(String message) {
-        return new ApiResponse<>(ApiStatus.INTERNAL_SERVER_ERROR, null, message);
+    public static <T> ApiResponse<T> internalServerError(String msg) {
+        return new ApiResponse<>(ApiStatus.INTERNAL_SERVER_ERROR, null, msg);
     }
 
     /**
      * 自定义状态码响应，允许传入自定义状态码、数据和消息。
      *
-     * @param status 状态码
+     * @param code 状态码
      * @param data 响应数据
-     * @param message 响应消息
+     * @param msg 响应消息
      * @param <T> 数据类型
      * @return 包含自定义状态码、数据和消息的 ApiResponse 对象
      */
-    public static <T> ApiResponse<T> customResponse(int status, T data, String message) {
-        return new ApiResponse<>(status, data, message);
+    public static <T> ApiResponse<T> customResponse(int code, T data, String msg) {
+        return new ApiResponse<>(code, data, msg);
     }
 
     /**
@@ -266,4 +266,5 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> successWithoutData() {
         return new ApiResponse<>(ApiStatus.SUCCESS, null, "请求成功，无返回数据");
     }
+
 }

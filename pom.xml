@@ -66,6 +66,7 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.20.0</commons-io.version>
         <redisson.version>3.29.0</redisson.version>
+        <reactor-core.version>3.6.4</reactor-core.version>
     </properties>
     <!-- 版本管理 -->
     <dependencyManagement>
@@ -317,6 +318,13 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2}</version>
+            </dependency>
+
+            <!-- reactor -->
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-core</artifactId>
+                <version>${reactor-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

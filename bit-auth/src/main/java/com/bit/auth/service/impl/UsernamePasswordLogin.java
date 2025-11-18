@@ -6,11 +6,11 @@ import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.bit.auth.event.UserLoginEvent;
 import com.bit.auth.dto.request.TokenRequest;
 import com.bit.auth.service.LoginStrategy;
-import com.bit.common.core.context.ClientMetaInfo;
 import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.common.core.dto.response.ApiStatus;
-import com.bit.common.core.enums.LoginTypeEnum;
+import com.bit.common.core.enums.biz.LoginTypeEnum;
 import com.bit.common.utils.crypto.BCryptUtils;
+import com.bit.common.web.context.ClientMetaInfo;
 import com.bit.user.api.model.UserInfoEntity;
 import com.bit.user.api.service.UserInfoFeignClient;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.bit.common.core.constant.redis.RedisConstants.LOGIN_ATTEMPT_PREFIX;
 import static com.bit.common.core.constant.redis.RedisConstants.USER_INFO_PREFIX;
+import static com.bit.common.core.dto.response.ApiResponse.isFail;
 
 /**
  * @Datetime: 2025年11月08日14:35
@@ -66,7 +67,7 @@ public class UsernamePasswordLogin implements LoginStrategy {
     public ApiResponse<String> login(TokenRequest request, ClientMetaInfo info) {
         // 参数格式校验
         ApiResponse<String> validation = verification(request);
-        if (validation.getStatus() != ApiStatus.SUCCESS) {
+        if (isFail(validation)) {
             return validation;
         }
         // 用户名 密码
@@ -74,13 +75,13 @@ public class UsernamePasswordLogin implements LoginStrategy {
         String password = StringUtils.trimToEmpty(request.getPassword());
         // 防暴力破解
         validation = antiBruteForceCracking(username,  password);
-        if (validation.getStatus() != ApiStatus.SUCCESS) {
+        if (isFail(validation)) {
             return validation;
         }
         // 登入密码校验
         UserInfoEntity userInfo = userInfoFeignClient.getUserInfoByUsername(username);
         validation = validatePassword(userInfo, password);
-        if (validation.getStatus() != ApiStatus.SUCCESS) {
+        if (isFail(validation)) {
             return validation;
         }
         // 登录成功后重置计数器

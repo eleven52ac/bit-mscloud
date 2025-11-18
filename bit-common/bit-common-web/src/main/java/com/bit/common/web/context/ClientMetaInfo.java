@@ -1,18 +1,46 @@
-package com.bit.common.core.context;
+package com.bit.common.web.context;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 
+import java.io.Serial;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Data
 public class ClientMetaInfo {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 客户端IP
+     */
     private String ip;
+
+    /**
+     * 操作系统
+     */
     private String os;
+
+    /**
+     *  设备
+     */
     private String device;
+
+    /**
+     * 地域
+     */
     private String region;
+
+    /**
+     *  网络
+     */
     private String network;
+
+    /**
+     * 内部令牌
+     */
     private String internalToken;
 
     public static ClientMetaInfo from(HttpServletRequest req) {

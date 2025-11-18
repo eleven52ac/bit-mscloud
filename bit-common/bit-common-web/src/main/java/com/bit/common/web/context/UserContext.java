@@ -1,6 +1,5 @@
-package com.bit.common.core.context;
-
-import com.bit.common.core.model.UserInfo;
+package com.bit.common.web.context;
+import com.bit.common.web.model.UserInfo;
 
 /**
  * 用户上下文工具类，用于在当前线程中安全地存储和获取当前认证用户信息。

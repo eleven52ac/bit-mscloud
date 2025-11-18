@@ -1,9 +1,9 @@
 package com.bit.auth.service;
 
 import com.bit.auth.dto.request.TokenRequest;
-import com.bit.common.core.context.ClientMetaInfo;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.RegisterTypeEnum;
+import com.bit.common.core.enums.biz.RegisterTypeEnum;
+import com.bit.common.web.context.ClientMetaInfo;
 
 /**
  * @Datetime: 2025年11月09日17:24

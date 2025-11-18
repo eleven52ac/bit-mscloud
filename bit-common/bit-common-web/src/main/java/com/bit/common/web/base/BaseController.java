@@ -1,6 +1,6 @@
-package com.bit.common.core.base;
+package com.bit.common.web.base;
 
-import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.web.context.ClientMetaInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class BaseController {
 
     @Autowired
-    protected HttpServletRequest request;
+    private HttpServletRequest request;
 
     /**
      * 获取当前请求的客户端设备信息（封装了 IP、系统、设备、地区、网络）

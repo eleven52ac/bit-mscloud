@@ -22,5 +22,6 @@
         <module>bit-common-security</module>
         <module>bit-common-utils</module>
         <module>bit-common-thirdparty</module>
+        <module>bit-common-web</module>
     </modules>
 </project>

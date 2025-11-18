@@ -4,12 +4,12 @@ import cn.hutool.core.util.RandomUtil;
 import com.bit.auth.service.CaptchaStrategy;
 
 import com.bit.common.core.constant.redis.RedisConstants;
-import com.bit.common.core.context.ClientMetaInfo;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.CaptchaMethodEnum;
+import com.bit.common.core.enums.biz.CaptchaMethodEnum;
 import com.bit.common.core.enums.EmailTemplateEnum;
 import com.bit.common.utils.ict.EmailSendUtils;
 import com.bit.common.utils.verify.RegexUtils;
+import com.bit.common.web.context.ClientMetaInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

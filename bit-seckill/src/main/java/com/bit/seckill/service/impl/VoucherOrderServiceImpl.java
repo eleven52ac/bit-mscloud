@@ -3,10 +3,10 @@ package com.bit.seckill.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.bit.common.core.context.UserContext;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.utils.core.SnowflakeIdGenerator;
+import com.bit.common.utils.core.IdGenerator;
 import com.bit.common.utils.redis.RedisLock;
+import com.bit.common.web.context.UserContext;
 import com.bit.seckill.entity.SeckillVoucherEntity;
 import com.bit.seckill.entity.VoucherOrderEntity;
 import com.bit.seckill.mapper.VoucherOrderMapper;
@@ -46,9 +46,6 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 
     @Autowired
     private RedissonClient redissonClient;
-
-    private final SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator(1, 1);
-
 
     /**
      * 下单秒杀券【单机部署版】
@@ -206,7 +203,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         try {
             Date now = new Date();
             VoucherOrderEntity order = new VoucherOrderEntity.Builder()
-                    .id(idGenerator.nextId())
+                    .id(IdGenerator.nextId(stringRedisTemplate))
                     .voucherId(voucherId)
                     .userId(userId)
                     .status(1)

@@ -1,4 +1,4 @@
-package com.bit.common.core.model;
+package com.bit.common.web.model;
 
 import lombok.Data;
 

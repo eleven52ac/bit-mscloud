@@ -1,4 +1,4 @@
-package com.bit.common.utils.http;
+package com.bit.common.web.utils.http;
 
 import jakarta.servlet.http.HttpServletRequest;
 

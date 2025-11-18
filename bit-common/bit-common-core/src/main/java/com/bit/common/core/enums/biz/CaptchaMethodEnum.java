@@ -1,4 +1,4 @@
-package com.bit.common.core.enums;
+package com.bit.common.core.enums.biz;
 
 /**
  * @Datetime: 2025年11月09日17:53

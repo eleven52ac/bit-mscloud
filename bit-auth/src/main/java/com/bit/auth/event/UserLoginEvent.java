@@ -1,6 +1,6 @@
 package com.bit.auth.event;
 
-import com.bit.common.core.context.ClientMetaInfo;
+import com.bit.common.web.context.ClientMetaInfo;
 import com.bit.user.api.model.UserInfoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,9 +2,9 @@ package com.bit.auth.controller;
 
 import cn.hutool.core.util.NumberUtil;
 import com.bit.auth.service.CaptchaService;
-import com.bit.common.core.context.UserContext;
 import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.common.security.annotation.CheckLogin;
+import com.bit.common.web.context.UserContext;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

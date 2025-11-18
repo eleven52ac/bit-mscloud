@@ -3,14 +3,13 @@ package com.bit.auth.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.bit.auth.dto.request.TokenRequest;
 import com.bit.auth.service.RegisterStrategy;
-import com.bit.common.core.constant.redis.RedisConstants.*;
-import com.bit.common.core.context.ClientMetaInfo;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.RegisterTypeEnum;
+import com.bit.common.core.enums.biz.RegisterTypeEnum;
 import com.bit.common.utils.core.IdGenerator;
 import com.bit.common.utils.crypto.BCryptUtils;
 import com.bit.common.utils.jwt.JwtUtils;
 import com.bit.common.utils.verify.RegexUtils;
+import com.bit.common.web.context.ClientMetaInfo;
 import com.bit.user.api.model.UserInfoEntity;
 import com.bit.user.api.service.UserInfoFeignClient;
 import lombok.extern.slf4j.Slf4j;
@@ -315,7 +314,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
             // 远程调用用户中心创建
             ApiResponse<String> response = userInfoFeignClient.createUser(userInfo);
             if (isFail(response)) {
-                log.error("创建用户失败: {}", response.getMessage());
+                log.error("创建用户失败: {}", response.getMsg());
                 return ApiResponse.error("系统繁忙，请稍后再试");
             }
 

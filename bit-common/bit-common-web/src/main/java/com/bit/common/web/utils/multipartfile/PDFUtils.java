@@ -1,4 +1,4 @@
-package com.bit.common.utils.pdf;
+package com.bit.common.web.utils.multipartfile;
 
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;

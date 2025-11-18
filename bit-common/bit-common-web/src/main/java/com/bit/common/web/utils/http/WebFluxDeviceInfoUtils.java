@@ -1,6 +1,6 @@
-package com.bit.common.utils.http;
+package com.bit.common.web.utils.http;
 
-import com.bit.common.utils.http.context.DeviceInfo;
+import com.bit.common.web.context.DeviceInfo;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
