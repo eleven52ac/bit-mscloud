@@ -79,7 +79,7 @@
         </dependency>
         <dependency>
             <groupId>bit</groupId>
-            <artifactId>bit-common-</artifactId>
+            <artifactId>bit-common-thirdparty</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>

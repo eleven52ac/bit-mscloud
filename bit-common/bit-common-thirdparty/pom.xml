@@ -8,9 +8,9 @@
         <version>1.0.0</version>
     </parent>
     <!-- Artifacts -->
-    <artifactId>bit-common-</artifactId>
+    <artifactId>bit-common-thirdparty</artifactId>
     <version>1.0.0</version>
-    <name>common-security</name>
+    <name>common-thirdparty</name>
 
     <dependencies>
         <!-- lombok -->

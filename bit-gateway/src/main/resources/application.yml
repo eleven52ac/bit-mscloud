@@ -48,10 +48,12 @@ spring:
 
       # 静态路由配置（自定义前缀转发）
       routes:
-        - id: user-service
+        - id: ms-user
           uri: lb://ms-user
           predicates:
             - Path=/api/user/**
+          filters:
+            - StripPrefix=1
         - id: ms-elasticsearch
           uri: lb://ms-elasticsearch
           predicates:

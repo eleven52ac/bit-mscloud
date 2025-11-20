@@ -1,7 +1,9 @@
 package com.bit.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bit.user.dto.request.UserLoginHistoryRequest;
 import com.bit.user.entity.UserLoginHistoryEntity;
 import com.bit.user.service.UserLoginHistoryService;
 import com.bit.user.mapper.UserLoginHistoryMapper;
@@ -31,6 +33,14 @@ public class UserLoginHistoryServiceImpl extends ServiceImpl<UserLoginHistoryMap
                 .last("limit 5");
         List<UserLoginHistoryEntity> list = this.list(queryWrapper);
         return list == null ? Collections.emptyList() : list;
+    }
+
+    @Override
+    public Page<UserLoginHistoryEntity> getUserLoginHistory(Page<UserLoginHistoryEntity> page, Long userId) {
+        LambdaQueryWrapper<UserLoginHistoryEntity> queryWrapper = new LambdaQueryWrapper<UserLoginHistoryEntity>()
+                .eq(UserLoginHistoryEntity::getUserId, userId)
+                .orderByDesc(UserLoginHistoryEntity::getLoginTime);
+        return userLoginHistoryMapper.selectPage(page, queryWrapper);
     }
 
 }

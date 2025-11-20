@@ -37,7 +37,7 @@ public class IdGeneratorTest {
             usedMem = totalMem - freeMem;
         }
 
-        int virtualThreadCount = 50_000; // 启动 5 万个虚拟线程
+        int virtualThreadCount = 100_000; // 启动 5 万个虚拟线程
         int idsPerThread = 1_000;        // 每个线程生成 1000 个 ID
         long totalExpected = (long) virtualThreadCount * idsPerThread;
 

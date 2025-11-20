@@ -3,15 +3,15 @@ package com.bit.user.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.common.utils.core.IdGenerator;
+import com.bit.common.web.base.BaseController;
 import com.bit.common.web.model.page.PageDataInfo;
+import com.bit.user.dto.request.UserLoginHistoryRequest;
 import com.bit.user.entity.UserLoginHistoryEntity;
 import com.bit.user.service.UserLoginHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 import static com.bit.common.web.model.page.PageDataInfo.getPageDataInfo;
 
 /**
@@ -23,7 +23,7 @@ import static com.bit.common.web.model.page.PageDataInfo.getPageDataInfo;
 @RestController
 @RequestMapping("/user/login/history")
 @RequiredArgsConstructor
-public class UserLoginHistoryController {
+public class UserLoginHistoryController extends BaseController {
 
     @Autowired
     private UserLoginHistoryService userLoginHistoryService;
@@ -54,12 +54,16 @@ public class UserLoginHistoryController {
         return saved ? ApiResponse.success("保存登录记录成功") : ApiResponse.error("保存登录记录失败");
     }
 
-    //登录历史记录
+    /**
+     * 登录历史记录
+     * @Author: Eleven52AC
+     * @Description:
+     * @return
+     */
     @GetMapping("/list")
-    public ApiResponse<PageDataInfo> list(){
-        Page<UserLoginHistoryEntity> page = new Page<>();
-        PageDataInfo pageInfo = new PageDataInfo();
-        //List<UserLoginHistoryEntity> list = userLoginHistoryService.queryAll();
+    public ApiResponse<PageDataInfo> list(@RequestParam(name = "userId") Long userId){
+        Page<UserLoginHistoryEntity> page = userLoginHistoryService.getUserLoginHistory(getMybatisPage(), userId);
         return getPageDataInfo(page);
     }
+
 }

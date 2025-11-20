@@ -1,5 +1,7 @@
 package com.bit.user.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bit.user.dto.request.UserLoginHistoryRequest;
 import com.bit.user.entity.UserLoginHistoryEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +15,14 @@ import java.util.List;
 public interface UserLoginHistoryService extends IService<UserLoginHistoryEntity> {
 
     List<UserLoginHistoryEntity> queryRecentLoginData(Long userId);
+
+    /**
+     * 获取用户登录历史
+     * @Author: Eleven52AC
+     * @Description:
+     * @param mybatisPage
+     * @param request
+     * @return
+     */
+    Page<UserLoginHistoryEntity> getUserLoginHistory(Page<UserLoginHistoryEntity> page, Long userId);
 }

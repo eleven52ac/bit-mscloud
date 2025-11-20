@@ -16,10 +16,10 @@ public class PageModel implements Serializable {
     private static final long serialVersionUID = -6507752560553288269L;
 
     /** 当前页码 */
-    private Integer pageNum = 1;
+    private Long pageNum = 1L;
 
     /** 每页大小 */
-    private Integer pageSize = 10;
+    private Long pageSize = 10L;
 
     /** 排序字段 */
     private String orderByColumn;
@@ -69,5 +69,13 @@ public class PageModel implements Serializable {
      */
     private String toUnderScoreCase(String str) {
         return str.replaceAll("([A-Z])", "_$1").toLowerCase();
+    }
+
+    public Long getSafePageNum() {
+        return pageNum == null || pageNum < 1 ? 1L : pageNum;
+    }
+
+    public Long getSafePageSize() {
+        return pageSize == null || pageSize < 1 ? 10L : pageSize;
     }
 }
