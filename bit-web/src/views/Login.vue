@@ -79,6 +79,9 @@
           <button type="button" class="login-form__link" @click="handleForgotPassword">
             忘记密码？
           </button>
+          <button type="button" class="login-form__link" @click="toRegister">
+            立即注册
+          </button>
         </div>
 
         <!-- 提交按钮 -->
@@ -247,6 +250,10 @@ const handleForgotPassword = () => {
   generalError.value = ''
   successMessage.value = ''
   showAlert('请联系管理员重置密码。', { title: '忘记密码', type: 'info' })
+}
+
+const toRegister = () => {
+  router.push('/register')
 }
 
 // 登录提交
