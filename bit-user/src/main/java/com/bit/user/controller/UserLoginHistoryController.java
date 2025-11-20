@@ -1,7 +1,9 @@
 package com.bit.user.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.common.utils.core.IdGenerator;
+import com.bit.common.web.model.page.PageDataInfo;
 import com.bit.user.entity.UserLoginHistoryEntity;
 import com.bit.user.service.UserLoginHistoryService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.bit.common.web.model.page.PageDataInfo.getPageDataInfo;
 
 /**
  * 用户登录记录
@@ -48,5 +52,14 @@ public class UserLoginHistoryController {
         record.setId(IdGenerator.nextId());
         boolean saved = userLoginHistoryService.save(record);
         return saved ? ApiResponse.success("保存登录记录成功") : ApiResponse.error("保存登录记录失败");
+    }
+
+    //登录历史记录
+    @GetMapping("/list")
+    public ApiResponse<PageDataInfo> list(){
+        Page<UserLoginHistoryEntity> page = new Page<>();
+        PageDataInfo pageInfo = new PageDataInfo();
+        //List<UserLoginHistoryEntity> list = userLoginHistoryService.queryAll();
+        return getPageDataInfo(page);
     }
 }

@@ -1,9 +1,9 @@
 package mselasticsearch.filter;
 
+import com.bit.common.core.constant.security.SaltConstants;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import common.constant.SaltConstants;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;

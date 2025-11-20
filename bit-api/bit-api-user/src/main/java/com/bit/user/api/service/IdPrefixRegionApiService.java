@@ -1,4 +1,4 @@
-package com.bit.api.service;
+package com.bit.user.api.service;
 
 /**
  * @Datetime: 2025年10月25日16:47

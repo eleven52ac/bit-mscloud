@@ -55,17 +55,17 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-core</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- bit-common-utils -->
         <dependency>
             <groupId>bit</groupId>
             <artifactId>bit-common-utils</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-web</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
