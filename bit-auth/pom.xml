@@ -10,80 +10,13 @@
     </parent>
     <!-- Project -->
     <artifactId>bit-auth</artifactId>
-    <version>1.0.0</version>
+    <packaging>pom</packaging>
     <name>auth</name>
 
-    <dependencies>
-        <!-- Spring Cloud OpenFeign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-        <!-- SpringCloud Alibaba Nacos -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-        <!-- SpringBoot Web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <!-- Spring Cloud LoadBalancer -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-        </dependency>
-        <!-- bit-common-utils -->
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-utils</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-database</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-security</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <!-- spring-boot-starter-test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- bit-api-user -->
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-api-user</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <!-- bit-common-web -->
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-web</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-thirdparty</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
+    <!-- Sub-modules -->
+    <modules>
+        <module>bit-auth-api</module>
+        <module>bit-auth-service</module>
+    </modules>
 
-
-    </dependencies>
 </project>

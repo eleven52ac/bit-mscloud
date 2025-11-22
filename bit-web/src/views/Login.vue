@@ -130,8 +130,8 @@ import { login } from '../api/auth'
 
 // 登录接口响应结构（根据后端返回拓展）
 interface LoginResponse {
-  code?: number
-  msg?: string
+  status?: number
+  message?: string
   data?: unknown
   token?: string
 }
@@ -280,10 +280,10 @@ const handleLogin = async () => {
       localStorage.removeItem('rememberedUsername')
     }
 
-    if (payload?.code !== 200) {
+    if (payload?.status !== 200) {
       const message =
-        payload?.msg ||
-        (payload?.code ? `登录失败（状态码：${payload.code}）` : '') ||
+        payload?.message ||
+        (payload?.status ? `登录失败（状态码：${payload.status}）` : '') ||
         '登录失败，请稍后重试。'
       console.warn('登录失败：', payload)
       generalError.value = ''
@@ -314,7 +314,7 @@ const handleLogin = async () => {
     }, 1000)
   } catch (error: any) {
     const message =
-      error?.response?.data?.msg ||
+      error?.response?.data?.message ||
       error?.message ||
       '登录失败，请稍后重试。'
     generalError.value = ''

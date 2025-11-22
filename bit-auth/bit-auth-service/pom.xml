@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- Parent project -->
+    <parent>
+        <groupId>bit</groupId>
+        <artifactId>bit-auth</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <!-- Project -->
+    <artifactId>bit-auth-service</artifactId>
+    <packaging>jar</packaging>
+    <name>auth-service</name>
+
+    <dependencies>
+        <!-- Spring Cloud OpenFeign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!-- SpringCloud Alibaba Nacos -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- SpringBoot Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Spring Cloud LoadBalancer -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <!-- bit-common-utils -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-utils</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- bit-common-database -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-database</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- bit-common-security -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-security</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- spring-boot-starter-test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- bit-api-user -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-api-user</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!-- bit-common-web -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-web</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- bit-common-thirdparty -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-thirdparty</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- bit-auth-api -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-auth-api</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- Parent project -->
+    <parent>
+        <groupId>bit</groupId>
+        <artifactId>bit-user</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <!-- Project -->
+    <artifactId>bit-user-api</artifactId>
+    <packaging>jar</packaging>
+    <name>user-api</name>
+
+    <description>
+        user API 模块，暴露给其他模块调用。
+    </description>
+
+    <dependencies>
+        <!-- OpenFeign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!-- SpringCloud Alibaba Nacos -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- SpringBoot Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- bit-common-utils -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-utils</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- bit-common-web -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-common-web</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

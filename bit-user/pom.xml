@@ -8,74 +8,15 @@
         <artifactId>bit-mscloud</artifactId>
         <version>1.0.0</version>
     </parent>
-
     <!-- Project -->
     <artifactId>bit-user</artifactId>
-    <version>1.0.0</version>
+    <packaging>pom</packaging>
     <name>user</name>
 
-    <dependencies>
+    <!-- Sub-modules -->
+    <modules>
+        <module>bit-user-api</module>
+        <module>bit-user-service</module>
+    </modules>
 
-        <!-- OpenFeign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <!-- SpringCloud Alibaba Nacos -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-
-        <!-- SpringBoot Web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- bit-common-database -->
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-database</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <!-- spring-boot-starter-test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- bit-common-utils -->
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-utils</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>bit</groupId>
-            <artifactId>bit-common-web</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- mybatis-plus -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-    </dependencies>
 </project>
