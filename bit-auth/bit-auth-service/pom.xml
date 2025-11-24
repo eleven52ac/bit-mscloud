@@ -72,6 +72,12 @@
             <artifactId>bit-api-user</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <!-- bit-api-user -->
+        <dependency>
+            <groupId>bit</groupId>
+            <artifactId>bit-user-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- bit-common-web -->
         <dependency>
             <groupId>bit</groupId>

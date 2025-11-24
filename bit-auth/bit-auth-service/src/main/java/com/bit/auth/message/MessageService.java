@@ -1,8 +1,8 @@
 package com.bit.auth.message;
 
+import bit.com.user.api.user.dto.response.UserInfoResponse;
 import com.bit.common.utils.ict.EmailSendUtils;
 import com.bit.common.web.context.ClientMetaInfo;
-import com.bit.user.api.model.UserInfoEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -18,7 +18,7 @@ public class MessageService {
     private EmailSendUtils emailSendUtils;
 
     @Async
-    public void sendLoginAlert(UserInfoEntity user, ClientMetaInfo info, String reason) {
+    public void sendLoginAlert(UserInfoResponse user, ClientMetaInfo info, String reason) {
         try {
             String msg = String.format("""
                     【安全提醒】

@@ -1,10 +1,10 @@
 package com.bit.common.utils.core;
 
-
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 雪花 ID 生成器（Snowflake ID Generator）。
@@ -117,33 +117,38 @@ public class SnowflakeIdGenerator {
     /**
      * 当前数据中心 ID，由构造时传入，范围 [0, 31]。
      */
-    private long datacenterId;
+    private final long datacenterId;
 
     /**
      * 当前工作节点 ID，由构造时传入，范围 [0, 31]。
      */
-    private long workerId;
+    private final long workerId;
 
     /**
-     * 当前毫秒内的序列号，初始为 0。
-     * 每次生成 ID 时递增，达到 4095 后归零并等待下一毫秒。
+     * 允许的小范围时钟回拨（毫秒）。
      */
-    private long sequence = 0L;
+    private static final long MAX_BACKWARD_MS = 5L;
 
     /**
-     * 上一次生成 ID 的时间戳（毫秒）。
-     * 用于检测时钟回拨和控制序列号重置。
-     * 初始值为 -1，表示尚未生成过 ID。
+     * 使用一个 AtomicLong 将「最后一次使用的时间戳」和「序列号」打包在一起，避免加锁。
+     * state 的结构：
+     *
+     * 高 52 位：上一次生成 ID 使用的时间戳（毫秒）
+     * 低 12 位：该时间戳下的序列号
+     *
+     * 即：state = (lastTimestamp << sequenceBits) | sequence
      */
-    private long lastTimestamp = -1L;
+    private final AtomicLong state = new AtomicLong(0L);
 
     private static volatile SnowflakeIdGenerator instance;
 
     public SnowflakeIdGenerator(long datacenterId, long workerId) {
-        if (datacenterId > maxDatacenterId || datacenterId < 0)
+        if (datacenterId > maxDatacenterId || datacenterId < 0) {
             throw new IllegalArgumentException("Datacenter ID out of range");
-        if (workerId > maxWorkerId || workerId < 0)
+        }
+        if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException("Worker ID out of range");
+        }
         this.datacenterId = datacenterId;
         this.workerId = workerId;
     }
@@ -167,51 +172,72 @@ public class SnowflakeIdGenerator {
      * | 1 位保留位（始终为 0）| 41 位时间戳（毫秒）| 5 位数据中心 ID | 5 位工作节点 ID | 12 位序列号 |
      * </pre>
      * <p>
-     * <strong>线程安全</strong>：通过 {@code synchronized} 保证多线程环境下 ID 的唯一性和单调递增性。
+     * <strong>线程安全</strong>：通过 AtomicLong + CAS 实现无锁并发控制，保证多线程环境下 ID 的唯一性和单调递增性。
      * <p>
      * <strong>时钟回拨处理</strong>：
      * <ul>
-     *   <li>若回拨 ≤ 5ms：阻塞等待至回拨结束；</li>
+     *   <li>若回拨 ≤ 5ms：拉平到 lastTimestamp，保证 ID 单调递增；</li>
      *   <li>若回拨 > 5ms：抛出运行时异常，拒绝生成 ID（需外部干预，如监控告警）。</li>
      * </ul>
      *
      * @return 生成的全局唯一雪花 ID（64 位 long 类型）
      * @throws RuntimeException 当系统时钟发生严重回拨（> 5ms）时抛出，表示无法安全生成 ID
      */
-    public synchronized long nextId() {
-        long timestamp = currentTime();
-        // 时钟回拨检测，确保ID的单调递增性
-        if (timestamp < lastTimestamp) {
-            long offset = lastTimestamp - timestamp;
-            // 允许小范围时钟漂移（<= 5ms）通过等待解决
-            if (offset <= 5) {
-                timestamp = waitNextMillis(lastTimestamp);
-            } else {
-                // 拒绝处理大范围时钟回拨，防止ID冲突
-                throw new RuntimeException("Clock moved backwards. Refusing to generate id for " + offset + "ms");
-            }
-        }
-        // 生成同一毫秒内ID的序列号
-        if (timestamp == lastTimestamp) {
-            sequence = (sequence + 1) & sequenceMask;
-            // 如果序列号溢出，则等待下一毫秒
-            if (sequence == 0) {
-                timestamp = waitNextMillis(lastTimestamp);
-            }
-        } else {
-            // 新毫秒开始，重置序列号
-            sequence = 0L;
-        }
-        // 更新最后时间戳
-        lastTimestamp = timestamp;
-        // 组合各部分形成最终ID：
-        // [时间戳(41位)] [数据中心ID(5位)] [工作节点ID(5位)] [序列号(12位)]
-        return ((timestamp - twepoch) << timestampLeftShift)
-                | (datacenterId << datacenterIdShift)
-                | (workerId << workerIdShift)
-                | sequence;
-    }
+    public long nextId() {
+        for (; ; ) {
+            long currentState = state.get();
+            long lastTimestamp = currentState >>> sequenceBits;
+            long lastSequence = currentState & sequenceMask;
 
+            long timestamp = currentTime();
+
+            // 时钟回拨检测，确保 ID 的单调递增性
+            if (timestamp < lastTimestamp) {
+                long offset = lastTimestamp - timestamp;
+                if (offset <= MAX_BACKWARD_MS) {
+                    // 小范围回拨：直接拉平到 lastTimestamp
+                    timestamp = lastTimestamp;
+                } else {
+                    // 拒绝处理大范围时钟回拨，防止 ID 冲突
+                    throw new RuntimeException(
+                            "Clock moved backwards. Refusing to generate id for " + offset + "ms"
+                    );
+                }
+            }
+
+            long nextTimestamp = timestamp;
+            long nextSequence;
+
+            if (timestamp == lastTimestamp) {
+                // 同一毫秒内，序列号自增
+                nextSequence = (lastSequence + 1) & sequenceMask;
+                // 如果序列号溢出，则等待下一毫秒
+                if (nextSequence == 0) {
+                    nextTimestamp = waitNextMillis(lastTimestamp);
+                }
+            } else {
+                // 新毫秒开始，重置序列号
+                nextSequence = 0L;
+            }
+
+            long nextState = (nextTimestamp << sequenceBits) | nextSequence;
+
+            // CAS 更新状态，成功则生成 ID，失败则自旋重试
+            if (state.compareAndSet(currentState, nextState)) {
+                long diff = nextTimestamp - twepoch;
+                if (diff < 0) {
+                    throw new RuntimeException("Current timestamp is before twepoch: " + nextTimestamp);
+                }
+                // 组合各部分形成最终 ID：
+                // [时间戳(41位)] [数据中心ID(5位)] [工作节点ID(5位)] [序列号(12位)]
+                return (diff << timestampLeftShift)
+                        | (datacenterId << datacenterIdShift)
+                        | (workerId << workerIdShift)
+                        | nextSequence;
+            }
+            // CAS 失败表示有其他线程并发更新了 state，继续 for 循环重试即可
+        }
+    }
 
     /**
      * 自旋等待直到获取到大于指定时间戳的当前时间（毫秒）。
@@ -225,9 +251,7 @@ public class SnowflakeIdGenerator {
      *           但因等待时间极短（通常 < 1ms），对系统影响可忽略。
      */
     private long waitNextMillis(long lastTimestamp) {
-        // 获取当前时间戳
         long timestamp = currentTime();
-        // 循环等待直到获取到大于lastTimestamp的时间戳
         while (timestamp <= lastTimestamp) {
             Thread.onSpinWait();
             timestamp = currentTime();
@@ -237,8 +261,6 @@ public class SnowflakeIdGenerator {
 
     /**
      * 获取当前系统时间戳（毫秒）。
-     * <p>
-     * 该方法用于获取当前系统的时间戳，并返回以毫秒为单位的时间戳。
      *
      * @return 当前系统时间戳（毫秒）
      */
@@ -247,15 +269,15 @@ public class SnowflakeIdGenerator {
     }
 
     /**
- * 获取工作节点ID
- *
- * <p>通过本机IP地址生成工作节点ID，确保在同一数据中心内的不同节点具有唯一的工作ID。
- * 使用IP地址的hash值与0x1F(31)进行按位与运算，保证返回值在0-31范围内(5位)。</p>
- *
- * <p>如果获取本机IP失败，则随机生成一个0-31之间的数字作为工作节点ID。</p>
- *
- * @return long 工作节点ID (0-31)
- */
+     * 获取工作节点ID
+     *
+     * <p>通过本机IP地址生成工作节点ID，确保在同一数据中心内的不同节点具有唯一的工作ID。
+     * 使用IP地址的hash值与0x1F(31)进行按位与运算，保证返回值在0-31范围内(5位)。</p>
+     *
+     * <p>如果获取本机IP失败，则随机生成一个0-31之间的数字作为工作节点ID。</p>
+     *
+     * @return long 工作节点ID (0-31)
+     */
     private static long getWorkerId() {
         // 环境变量（K8s/Docker）
         String workerIdStr = System.getenv("SNOWFLAKE_WORKER_ID");
@@ -287,61 +309,51 @@ public class SnowflakeIdGenerator {
         }
     }
 
-
-   /**
-    * 获取数据中心ID
-    *
-    * <p>通过本机主机名生成数据中心ID，确保在不同数据中心内的节点具有不同的数据中心标识。
-    * 使用主机名的hash值与0x1F(31)进行按位与运算，保证返回值在0-31范围内(5位)。</p>
-    *
-    * <p>如果获取主机名失败，则返回默认值1作为数据中心ID。</p>
-    *
-    * @return long 数据中心ID (0-31)
-    */
-     private static long getDatacenterId() {
-         // 环境变量（K8s/Docker）
-         String datacenterIdStr = System.getenv("SNOWFLAKE_DATACENTER_ID");
-         // JVM 参数（虚拟机环境）
-         if (datacenterIdStr == null) {
-             datacenterIdStr = System.getProperty("snowflake.datacenterId");
-         }
-         // 解析并校验
-         if (datacenterIdStr != null) {
-             try {
-                 long id = Long.parseLong(datacenterIdStr);
-                 if (id >= 0 && id <= 31) {
-                     log.info("DatacenterId 通过配置获取: {}", id);
-                     return id;
-                 }else {
-                     log.error("DatacenterId 配置无效(超出范围): {}", id);
-                 }
-             }catch (NumberFormatException e) {
-                 log.error("DatacenterId 配置格式错误: {}", datacenterIdStr);
-             }
-         }
-         try {
+    /**
+     * 获取数据中心ID
+     *
+     * <p>通过本机主机名生成数据中心ID，确保在不同数据中心内的节点具有不同的数据中心标识。
+     * 使用主机名的hash值与0x1F(31)进行按位与运算，保证返回值在0-31范围内(5位)。</p>
+     *
+     * <p>如果获取主机名失败，则返回默认值1作为数据中心ID。</p>
+     *
+     * @return long 数据中心ID (0-31)
+     */
+    private static long getDatacenterId() {
+        // 环境变量（K8s/Docker）
+        String datacenterIdStr = System.getenv("SNOWFLAKE_DATACENTER_ID");
+        // JVM 参数（虚拟机环境）
+        if (datacenterIdStr == null) {
+            datacenterIdStr = System.getProperty("snowflake.datacenterId");
+        }
+        // 解析并校验
+        if (datacenterIdStr != null) {
+            try {
+                long id = Long.parseLong(datacenterIdStr);
+                if (id >= 0 && id <= 31) {
+                    log.info("DatacenterId 通过配置获取: {}", id);
+                    return id;
+                } else {
+                    log.error("DatacenterId 配置无效(超出范围): {}", id);
+                }
+            } catch (NumberFormatException e) {
+                log.error("DatacenterId 配置格式错误: {}", datacenterIdStr);
+            }
+        }
+        try {
             // 获取本机主机名并计算hash值，取低5位作为数据中心ID
             String hostname = InetAddress.getLocalHost().getHostName();
             return (hostname.hashCode() & 0x1F);
-            } catch (Exception e) {
-           // 主机名获取失败时，返回默认数据中心ID
-             return 1L;
-            }
+        } catch (Exception e) {
+            // 主机名获取失败时，返回默认数据中心ID
+            return 1L;
         }
-
+    }
 
     /**
-     * 生成下一个分布式唯一ID
-     *
-     * <p>此方法通过获取单例实例来生成全局唯一的ID，
-     * 为调用者提供简洁的静态方法调用方式。</p>
-     *
-     * @return long 生成的唯一ID
-     * @see #getInstance()
-     * @see SnowflakeIdGenerator#nextId()
+     * 生成下一个分布式唯一ID（静态便捷方法）
      */
     public static long next() {
-        // 通过单例实例代理生成下一个唯一ID
         return getInstance().nextId();
     }
 }

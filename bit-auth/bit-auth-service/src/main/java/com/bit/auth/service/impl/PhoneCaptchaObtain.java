@@ -2,7 +2,7 @@ package com.bit.auth.service.impl;
 
 import com.bit.auth.service.CaptchaStrategy;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.biz.CaptchaMethodEnum;
+import com.bit.auth.enums.captcha.CaptchaMethodEnum;
 import com.bit.common.web.context.ClientMetaInfo;
 import org.springframework.stereotype.Service;
 

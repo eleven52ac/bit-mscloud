@@ -9,7 +9,7 @@
     </parent>
     <!-- Artifacts -->
     <artifactId>bit-common-core</artifactId>
-    <version>1.0.0</version>
+    <packaging>jar</packaging>
     <name>common-core</name>
 
     <dependencies>

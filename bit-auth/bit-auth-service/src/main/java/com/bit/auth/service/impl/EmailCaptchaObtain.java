@@ -5,7 +5,7 @@ import com.bit.auth.service.CaptchaStrategy;
 
 import com.bit.common.core.constant.redis.RedisConstants;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.biz.CaptchaMethodEnum;
+import com.bit.auth.enums.captcha.CaptchaMethodEnum;
 import com.bit.common.core.enums.EmailTemplateEnum;
 import com.bit.common.utils.ict.EmailSendUtils;
 import com.bit.common.utils.verify.RegexUtils;

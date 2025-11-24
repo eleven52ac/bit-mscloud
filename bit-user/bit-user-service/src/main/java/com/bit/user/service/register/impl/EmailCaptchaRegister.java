@@ -1,17 +1,17 @@
-package com.bit.auth.service.impl;
+package com.bit.user.service.register.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.bit.auth.controller.auth.vo.request.TokenRequestVo;
-import com.bit.auth.service.RegisterStrategy;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.biz.RegisterTypeEnum;
+import bit.com.user.enums.register.RegisterTypeEnum;
 import com.bit.common.utils.core.IdGenerator;
 import com.bit.common.utils.crypto.BCryptUtils;
 import com.bit.common.utils.jwt.JwtUtils;
 import com.bit.common.utils.verify.RegexUtils;
 import com.bit.common.web.context.ClientMetaInfo;
-import com.bit.user.api.model.UserInfoEntity;
-import com.bit.user.api.service.UserInfoFeignClient;
+import com.bit.user.controller.user.vo.request.RegisterRequestVo;
+import com.bit.user.repository.dataobject.user.UserInfoDo;
+import com.bit.user.service.register.RegisterStrategy;
+import com.bit.user.service.user.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,11 +40,12 @@ import static com.bit.common.core.dto.response.ApiResponse.isFail;
 @Service
 public class EmailCaptchaRegister implements RegisterStrategy {
 
-    @Autowired
-    private UserInfoFeignClient userInfoFeignClient;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     private static final DefaultRedisScript<Long> RATE_LIMIT_SCRIPT;
 
@@ -68,7 +69,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
     }
 
     @Override
-    public ApiResponse<String> register(TokenRequestVo request, ClientMetaInfo info) {
+    public ApiResponse<String> register(RegisterRequestVo request, ClientMetaInfo info) {
         // 参数校验
         ApiResponse<String> validation = validateParams(request);
         if (isFail(validation)){
@@ -108,7 +109,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
      * @Description: 标准化输入
      * @param request
      */
-    private void normalizedInput(TokenRequestVo request) {
+    private void normalizedInput(RegisterRequestVo request) {
         request.setEmail(request.getEmail().trim().toLowerCase());
     }
 
@@ -120,7 +121,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
      * @param request
      * @return
      */
-    private ApiResponse<String> validateParams(TokenRequestVo request) {
+    private ApiResponse<String> validateParams(RegisterRequestVo request) {
         if (StringUtils.isBlank(request.getEmail())){
             return ApiResponse.badRequest("邮箱不能为空");
         }
@@ -179,6 +180,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
         }
     }
 
+
     /**
      *
      * @Author: Eleven52AC
@@ -222,13 +224,13 @@ public class EmailCaptchaRegister implements RegisterStrategy {
      * @param request
      * @return
      */
-    private ApiResponse<String> validateDuplicateRegister(TokenRequestVo request) {
+    private ApiResponse<String> validateDuplicateRegister(RegisterRequestVo request) {
         // 标准化输入（理论上可以区分大小写，但几乎所有主流邮箱服务商（Gmail、Outlook、QQ、163 等）都将其视为不区分大小写。）
         String normalizedEmail = request.getEmail().toLowerCase().trim();
         String normalizedUsername = Optional.ofNullable(request.getUsername()).map(String::trim).orElse(null);
         try {
             // 查询用户信息
-            UserInfoEntity userInfo = userInfoFeignClient.getUserInfoByEmail(normalizedEmail);
+            UserInfoDo userInfo = userInfoService.getUserInfoByEmail(normalizedEmail);
             if (ObjectUtils.isNotEmpty(userInfo)) {
                 String existingUsername = userInfo.getUsername();
                 // 重复提交注册（邮箱 & 用户名一致）
@@ -292,6 +294,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
         }
     }
 
+
     /**
      *
      * @param request
@@ -299,11 +302,11 @@ public class EmailCaptchaRegister implements RegisterStrategy {
      * @Author: Eleven52AC
      * @Description: 创建用户
      */
-    private ApiResponse<String> createUser(TokenRequestVo request) {
+    private ApiResponse<String> createUser(RegisterRequestVo request) {
         try {
             Long userId = IdGenerator.nextId();
             LocalDateTime now = LocalDateTime.now();
-            UserInfoEntity userInfo = new UserInfoEntity()
+            UserInfoDo userInfo = new UserInfoDo()
                     .setUserId(userId)
                     .setUsername(request.getUsername())
                     .setPassword(BCryptUtils.encode(request.getPassword()))
@@ -312,7 +315,7 @@ public class EmailCaptchaRegister implements RegisterStrategy {
                     .setLastLogin(now)
                     .setLoginCount(1);
             // 远程调用用户中心创建
-            ApiResponse<String> response = userInfoFeignClient.createUser(userInfo);
+            ApiResponse<String> response = userInfoService.createUser(userInfo);
             if (isFail(response)) {
                 log.error("创建用户失败: {}", response.getMsg());
                 return ApiResponse.error("系统繁忙，请稍后再试");

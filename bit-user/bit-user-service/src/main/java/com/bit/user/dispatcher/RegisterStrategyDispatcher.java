@@ -1,10 +1,10 @@
-package com.bit.auth.dispatcher;
+package com.bit.user.dispatcher;
 
-import com.bit.auth.controller.auth.vo.request.TokenRequestVo;
-import com.bit.auth.service.RegisterStrategy;
+import bit.com.user.enums.register.RegisterTypeEnum;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.biz.RegisterTypeEnum;
 import com.bit.common.web.context.ClientMetaInfo;
+import com.bit.user.controller.user.vo.request.RegisterRequestVo;
+import com.bit.user.service.register.RegisterStrategy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +37,7 @@ public class RegisterStrategyDispatcher {
      * @param request
      * @param info
      */
-    public ApiResponse<String> register (TokenRequestVo request, ClientMetaInfo info){
+    public ApiResponse<String> register (RegisterRequestVo request, ClientMetaInfo info){
         if (request == null){
             return ApiResponse.badRequest("注册请求不能为空");
         }

@@ -1,5 +1,7 @@
 package com.bit.auth.service.impl;
 
+import bit.com.user.api.user.UserInfoApi;
+import bit.com.user.api.user.dto.response.UserInfoResponse;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSignerUtil;
@@ -7,7 +9,7 @@ import com.bit.auth.controller.auth.vo.request.TokenRequestVo;
 import com.bit.auth.event.UserLoginEvent;
 import com.bit.auth.service.LoginStrategy;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.biz.LoginTypeEnum;
+import com.bit.auth.enums.login.LoginTypeEnum;
 import com.bit.common.utils.crypto.BCryptUtils;
 import com.bit.common.web.context.ClientMetaInfo;
 import com.bit.user.api.model.UserInfoEntity;
@@ -27,9 +29,9 @@ import static com.bit.common.core.constant.redis.RedisConstants.USER_INFO_PREFIX
 import static com.bit.common.core.dto.response.ApiResponse.isFail;
 
 /**
+ * 用户名密码登录服务实现类
  * @Datetime: 2025年11月08日14:35
  * @Author: Eleven52AC
- * @Description: 用户名密码登录服务实现类
  */
 @Service
 @Slf4j
@@ -39,16 +41,15 @@ public class UsernamePasswordLogin implements LoginStrategy {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private UserInfoFeignClient userInfoFeignClient;
+    private UserInfoApi userInfoApi;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     /**
-     *
+     * 登录类型
      * @Author: Eleven52AC
      * @Description: 获取登录类型
-     * @return 登录类型
      */
     @Override
     public LoginTypeEnum getLoginType() {
@@ -56,9 +57,8 @@ public class UsernamePasswordLogin implements LoginStrategy {
     }
 
     /**
-     *
+     * 登入
      * @Author: Eleven52AC
-     * @Description: 登入
      * @param request
      * @return
      */
@@ -78,7 +78,8 @@ public class UsernamePasswordLogin implements LoginStrategy {
             return validation;
         }
         // 登入密码校验
-        UserInfoEntity userInfo = userInfoFeignClient.getUserInfoByUsername(username);
+        ApiResponse<UserInfoResponse> response = userInfoApi.getUserInfoByUsername(username);
+        UserInfoResponse userInfo = response.getData();
         validation = validatePassword(userInfo, password);
         if (isFail(validation)) {
             return validation;
@@ -94,14 +95,13 @@ public class UsernamePasswordLogin implements LoginStrategy {
     }
 
     /**
-     *
+     * 登入密码校验
      * @Author: Eleven52AC
-     * @Description: 登入密码校验
      * @param userInfo
      * @param password
      * @return
      */
-    private ApiResponse<String> validatePassword(UserInfoEntity userInfo, String password) {
+    private ApiResponse<String> validatePassword(UserInfoResponse userInfo, String password) {
         if (userInfo == null){
             log.info("用户不存在");
             return ApiResponse.notFound("用户不存在，是否使用创建新用户？");

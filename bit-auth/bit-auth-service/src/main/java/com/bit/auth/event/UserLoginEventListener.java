@@ -1,5 +1,6 @@
 package com.bit.auth.event;
 
+import bit.com.user.api.user.dto.response.UserInfoResponse;
 import com.bit.auth.config.InternalTokenContext;
 import com.bit.auth.message.MessageService;
 import com.bit.common.web.context.ClientMetaInfo;
@@ -36,7 +37,7 @@ public class UserLoginEventListener {
             if (token != null) {
                 InternalTokenContext.set(token);
             }
-            UserInfoEntity user = event.getUserInfo();
+            UserInfoResponse user = event.getUserInfo();
             ClientMetaInfo info = event.getClientInfo();
             // 查询上一次登录记录
             List<UserLoginHistoryEntity> lasts = userLoginHistoryFeignClient.recentLoginData(user.getUserId());

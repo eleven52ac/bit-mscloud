@@ -28,11 +28,6 @@ public class TokenRequestVo implements Serializable {
     private String loginType;
 
     /**
-     * 注册类型
-     */
-    private String registerType;
-
-    /**
      * 用户名称
      */
     private String username;

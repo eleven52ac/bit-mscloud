@@ -1,7 +1,6 @@
 package com.bit.auth.controller.auth;
 
 import com.bit.auth.dispatcher.CaptchaStrategyDispatcher;
-import com.bit.auth.dispatcher.RegisterStrategyDispatcher;
 import com.bit.auth.controller.auth.vo.request.TokenRequestVo;
 import com.bit.auth.dispatcher.LoginStrategyDispatcher;
 import com.bit.common.core.dto.response.ApiResponse;
@@ -24,17 +23,13 @@ public class TokenController extends BaseController {
     @Autowired
     private LoginStrategyDispatcher loginStrategyDispatcher;
 
-    @Autowired
-    private RegisterStrategyDispatcher registerStrategyDispatcher;
 
     @Autowired
     private CaptchaStrategyDispatcher captchaStrategyDispatcher;
 
-
     /**
      * 登录
      * @Author: Eleven52AC
-     * @Description:
      * @param request
      * @return
      */
@@ -43,24 +38,9 @@ public class TokenController extends BaseController {
         return loginStrategyDispatcher.login(request, getClientInfo());
     }
 
-
-    /**
-     * 注册
-     * @Author: Eleven52AC
-     * @Description:
-     * @param request
-     * @return
-     */
-    @PostMapping("/register")
-    public ApiResponse<String> register(@RequestBody TokenRequestVo request) {
-        return registerStrategyDispatcher.register(request, getClientInfo());
-    }
-
-
     /**
      * 获取验证码
      * @Author: Eleven52AC
-     * @Description:
      * @param  identifier 唯一标识符
      * @param captchaMethod 验证码方式
      * @return

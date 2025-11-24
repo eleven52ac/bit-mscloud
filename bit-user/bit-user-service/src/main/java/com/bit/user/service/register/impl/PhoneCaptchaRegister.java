@@ -1,10 +1,10 @@
-package com.bit.auth.service.impl;
+package com.bit.user.service.register.impl;
 
-import com.bit.auth.controller.auth.vo.request.TokenRequestVo;
-import com.bit.auth.service.RegisterStrategy;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.biz.RegisterTypeEnum;
+import bit.com.user.enums.register.RegisterTypeEnum;
 import com.bit.common.web.context.ClientMetaInfo;
+import com.bit.user.controller.user.vo.request.RegisterRequestVo;
+import com.bit.user.service.register.RegisterStrategy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,7 +20,7 @@ public class PhoneCaptchaRegister implements RegisterStrategy {
     }
 
     @Override
-    public ApiResponse<String> register(TokenRequestVo request, ClientMetaInfo info) {
+    public ApiResponse<String> register(RegisterRequestVo request, ClientMetaInfo info) {
         return null;
     }
 

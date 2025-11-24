@@ -24,6 +24,9 @@
     <!-- 统一管理jar包版本 -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>21</java.version>
+        <bit-mscloud.version>1.0.0</bit-mscloud.version>
+
         <spring-boot-starter-web.version>3.3.2</spring-boot-starter-web.version>
         <spring-boot-starter-test.version>3.3.2</spring-boot-starter-test.version>
         <spring-security-crypto.version>6.5.5</spring-security-crypto.version>
@@ -32,41 +35,37 @@
         <spring-cloud-starter-gateway>4.1.5</spring-cloud-starter-gateway>
         <spring-cloud-starter-bootstrap>4.0.0</spring-cloud-starter-bootstrap>
         <spring-cloud-alibaba-dependencies>2023.0.1.2</spring-cloud-alibaba-dependencies>
+        <spring-cloud-starter-loadbalancer>4.1.4</spring-cloud-starter-loadbalancer>
         <spring-boot-starter-data-redis>3.4.4</spring-boot-starter-data-redis>
+        <spring-boot-starter-mail.version>3.4.4</spring-boot-starter-mail.version>
+        <spring-boot-starter-amqp>3.3.2</spring-boot-starter-amqp>
 
         <mysql.version>8.0.33</mysql.version>
-        <lombok.version>1.18.36</lombok.version>
-        <java.version>21</java.version>
-        <mybatis-plus-spring-boot3-starter>3.5.9</mybatis-plus-spring-boot3-starter>
-
-        <jackson-bom>2.15.2</jackson-bom>
-        <spring-cloud-starter-loadbalancer>4.1.4</spring-cloud-starter-loadbalancer>
-        <itext7-core>7.1.12</itext7-core>
-        <tika>2.5.0</tika>
-        <langdetect>1.1-20120112</langdetect>
-        <java-jwt>4.4.0</java-jwt>
-        <jbcrypt>0.4</jbcrypt>
-        <spring-boot-starter-amqp>3.3.2</spring-boot-starter-amqp>
-        <jackson-databind>2.18.2</jackson-databind>
         <elasticsearch-rest-high-level-client>7.16.2</elasticsearch-rest-high-level-client>
-        <fastjson2>2.0.53</fastjson2>
+        <redisson.version>3.29.0</redisson.version>
+        <reactor-core.version>3.6.4</reactor-core.version>
         <dynamic-datasource-spring-boot3-starter>4.3.0</dynamic-datasource-spring-boot3-starter>
+        <mybatis-plus-spring-boot3-starter>3.5.9</mybatis-plus-spring-boot3-starter>
+        <mybatis-plus-jsqlparser.version>3.5.11</mybatis-plus-jsqlparser.version>
+
+        <lombok.version>1.18.36</lombok.version>
         <guava.version>33.4.8-jre</guava.version>
         <commons-lang3.version>3.19.0</commons-lang3.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.20.0</commons-io.version>
         <slf4j.version>2.0.16</slf4j.version>
-        <bit-common.version>1.0.0</bit-common.version>
-        <spring-boot-starter-mail.version>3.4.4</spring-boot-starter-mail.version>
         <hutool-all.version>5.8.40</hutool-all.version>
+        <bit-common.version>1.0.0</bit-common.version>
 
-        <mybatis-plus-jsqlparser.version>3.5.11</mybatis-plus-jsqlparser.version>
-        <guava.version>33.4.8-jre</guava.version>
-        <commons-lang3.version>3.19.0</commons-lang3.version>
-        <commons-collections4.version>4.4</commons-collections4.version>
-        <commons-io.version>2.20.0</commons-io.version>
-        <redisson.version>3.29.0</redisson.version>
-        <reactor-core.version>3.6.4</reactor-core.version>
+        <jackson-bom>2.15.2</jackson-bom>
+        <itext7-core>7.1.12</itext7-core>
+        <tika>2.5.0</tika>
+        <langdetect>1.1-20120112</langdetect>
+        <java-jwt>4.4.0</java-jwt>
+        <jbcrypt>0.4</jbcrypt>
+        <jackson-databind>2.18.2</jackson-databind>
+        <fastjson2>2.0.53</fastjson2>
+
     </properties>
     <!-- 版本管理 -->
     <dependencyManagement>
@@ -325,6 +324,13 @@
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-core</artifactId>
                 <version>${reactor-core.version}</version>
+            </dependency>
+
+            <!-- bit-common-core -->
+            <dependency>
+                <groupId>bit</groupId>
+                <artifactId>bit-common-core</artifactId>
+                <version>${bit-mscloud.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bit.user.repository.mysql.user.UserInfoMapper">
 
-    <resultMap id="BaseResultMap" type="com.bit.user.entity.UserInfoEntity">
+    <resultMap id="BaseResultMap" type="com.bit.user.repository.dataobject.user.UserInfoDo">
             <id property="userId" column="user_id" />
             <result property="username" column="username" />
             <result property="password" column="password" />

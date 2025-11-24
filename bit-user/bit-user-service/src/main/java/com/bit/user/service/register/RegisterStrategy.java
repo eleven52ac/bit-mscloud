@@ -1,9 +1,9 @@
-package com.bit.auth.service;
+package com.bit.user.service.register;
 
-import com.bit.auth.controller.auth.vo.request.TokenRequestVo;
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.common.core.enums.biz.RegisterTypeEnum;
+import bit.com.user.enums.register.RegisterTypeEnum;
 import com.bit.common.web.context.ClientMetaInfo;
+import com.bit.user.controller.user.vo.request.RegisterRequestVo;
 
 /**
  * @Datetime: 2025年11月09日17:24
@@ -28,5 +28,5 @@ public interface RegisterStrategy {
      * @param info
      * @return
      */
-    ApiResponse<String> register(TokenRequestVo request, ClientMetaInfo info);
+    ApiResponse<String> register(RegisterRequestVo request, ClientMetaInfo info);
 }

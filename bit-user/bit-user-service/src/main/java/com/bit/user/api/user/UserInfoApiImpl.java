@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import static com.bit.common.core.dto.response.ApiResponse.success;
 
 /**
+ * 用户信息接口实现类
  * @Datetime: 2025年11月21日15:36
  * @Author: Eleven52AC
- * @Description: 用户信息接口实现类
  */
 @RestController
 @RequestMapping(UserApiConstants.API_PREFIX) // RPC 前缀

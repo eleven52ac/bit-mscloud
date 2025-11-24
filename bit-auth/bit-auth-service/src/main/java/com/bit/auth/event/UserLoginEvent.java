@@ -1,5 +1,6 @@
 package com.bit.auth.event;
 
+import bit.com.user.api.user.dto.response.UserInfoResponse;
 import com.bit.common.web.context.ClientMetaInfo;
 import com.bit.user.api.model.UserInfoEntity;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ public class UserLoginEvent {
     /**
      * 用户信息
      */
-    private final UserInfoEntity userInfo;
+    private final UserInfoResponse userInfo;
 
     /**
      * 客户端信息

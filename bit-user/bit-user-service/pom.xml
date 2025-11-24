@@ -56,14 +56,12 @@
             <groupId>bit</groupId>
             <artifactId>bit-common-utils</artifactId>
             <version>1.0.0</version>
-            <scope>compile</scope>
         </dependency>
         <!-- bit-common-web -->
         <dependency>
             <groupId>bit</groupId>
             <artifactId>bit-common-web</artifactId>
             <version>1.0.0</version>
-            <scope>compile</scope>
         </dependency>
         <!-- mybatis-plus -->
         <dependency>
@@ -76,7 +74,6 @@
             <groupId>bit</groupId>
             <artifactId>bit-user-api</artifactId>
             <version>1.0.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

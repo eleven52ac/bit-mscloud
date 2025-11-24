@@ -1,4 +1,4 @@
-package com.bit.common.core.enums.biz;
+package com.bit.auth.enums.login;
 
 /**
  * @Datetime: 2025年11月08日14:47

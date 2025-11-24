@@ -1,9 +1,12 @@
 package com.bit.user.controller.user;
 
 import com.bit.common.core.dto.response.ApiResponse;
-import com.bit.user.repository.dataobject.user.UserInfoDo;
+import com.bit.common.web.base.BaseController;
+import com.bit.user.controller.user.vo.request.RegisterRequestVo;
+import com.bit.user.dispatcher.RegisterStrategyDispatcher;
 import com.bit.user.service.user.UserInfoService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,24 +18,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-public class UserInfoController {
+public class UserInfoController extends BaseController {
 
     @Autowired
     private UserInfoService userInfoService;
 
-    @PostMapping("/create")
-    public ApiResponse<String> createUser(@RequestBody UserInfoDo userInfo) {
-        boolean save = userInfoService.save(userInfo);
-        return save ? ApiResponse.success("创建用户成功") : ApiResponse.error("创建用户失败");
+    @Autowired
+    private RegisterStrategyDispatcher registerStrategyDispatcher;
+
+    /**
+     * 用户注册
+     * @Author: Eleven52AC
+     * @param request
+     * @return
+     */
+    @PostMapping("/register")
+    public ApiResponse<String> createUser(@RequestBody RegisterRequestVo request) {
+        if(ObjectUtils.isEmpty(request)){
+            return ApiResponse.badRequest("注册信息为空");
+        }
+        return registerStrategyDispatcher.register(request, getClientInfo());
     }
 
-    @GetMapping("/email")
-    public UserInfoDo getUserInfoByEmail(@RequestParam(name = "email") String email) {
-        return userInfoService.getUserInfoByEmail(email);
-    }
-
-    @GetMapping("/username")
-    public UserInfoDo getUserInfoByUsername(@RequestParam(name = "username") String username) {
-        return userInfoService.getUserInfoByUsername(username);
-    }
 }

@@ -1,26 +1,27 @@
-package com.bit.common.core.enums.biz;
+package com.bit.auth.enums.captcha;
 
 /**
- * @Datetime: 2025年11月09日17:27
+ * @Datetime: 2025年11月09日17:53
  * @Author: Eleven52AC
- * @Description: 注册方式枚举
+ * @Description: 验证码枚举
  */
-public enum RegisterTypeEnum {
+public enum CaptchaMethodEnum {
 
-    PHONE_CAPTCHA("phone_code", "手机验证码注册"),
-    EMAIL_CAPTCHA("email_code", "邮箱验证码注册");
+
+    PHONE_CAPTCHA("phone_captcha", "手机验证码"),
+    EMAIL_CAPTCHA("email_captcha", "邮箱验证码");
 
     private final String code;
 
     private final String desc;
 
-    RegisterTypeEnum(String code, String desc) {
+    CaptchaMethodEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public static RegisterTypeEnum fromCode(String code) {
-        for (RegisterTypeEnum type : values()) {
+    public static CaptchaMethodEnum fromCode(String code) {
+        for (CaptchaMethodEnum type : values()) {
             if (type.code.equals(code)) {
                 return type;
             }
@@ -29,7 +30,7 @@ public enum RegisterTypeEnum {
     }
 
     public String findCodeByDesc(String desc) {
-        for (RegisterTypeEnum value : RegisterTypeEnum.values()) {
+        for (CaptchaMethodEnum value : CaptchaMethodEnum.values()) {
             if (value.desc.equals(desc)) {
                 return value.code;
             }
@@ -38,7 +39,7 @@ public enum RegisterTypeEnum {
     }
 
     public String findDescByCode(String code) {
-        for (RegisterTypeEnum value : RegisterTypeEnum.values()) {
+        for (CaptchaMethodEnum value : CaptchaMethodEnum.values()) {
             if (value.code.equals(code)) {
                 return value.desc;
             }

@@ -7,6 +7,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -37,7 +39,7 @@ public class IdGeneratorTest {
             usedMem = totalMem - freeMem;
         }
 
-        int virtualThreadCount = 100_000; // 启动 5 万个虚拟线程
+        int virtualThreadCount = 50_000; // 启动 5 万个虚拟线程
         int idsPerThread = 1_000;        // 每个线程生成 1000 个 ID
         long totalExpected = (long) virtualThreadCount * idsPerThread;
 
@@ -122,4 +124,29 @@ public class IdGeneratorTest {
         if (mb > 1) return String.format("%.2f MB", mb);
         return String.format("%.2f KB", kb);
     }
+
+    @Test
+    public void testNextIdPureQPS() throws Exception {
+        int threadCount = 32;   // 固定线程（32核 CPU 也能匹配）
+        long idPerThread = 2_000_000;  // 每线程生成 200 万
+        long total = idPerThread * threadCount;
+        ExecutorService pool = Executors.newFixedThreadPool(threadCount);
+        long start = System.currentTimeMillis();
+        CountDownLatch latch = new CountDownLatch(threadCount);
+        for (int t = 0; t < threadCount; t++) {
+            pool.submit(() -> {
+                for (int i = 0; i < idPerThread; i++) {
+                    IdGenerator.nextId();
+                }
+                latch.countDown();
+            });
+        }
+        latch.await();
+        long end = System.currentTimeMillis();
+        double qps = total * 1000.0 / (end - start);
+        System.out.println("总生成ID=" + total);
+        System.out.println("耗时=" + (end - start) + " ms");
+        System.out.println("QPS=" + String.format("%.0f", qps));
+    }
+
 }
