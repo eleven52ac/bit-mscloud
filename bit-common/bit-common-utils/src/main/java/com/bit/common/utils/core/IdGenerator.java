@@ -3,9 +3,6 @@ package com.bit.common.utils.core;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.StringRedisTemplate;
-
-import java.net.InetAddress;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -120,8 +117,8 @@ public final class IdGenerator {
                 // 第二次检查：防止并发情况下重复创建实例
                 if (SNOWFLAKE_INSTANCE == null) {
                     // 使用数据中心ID和工作节点ID创建雪花算法生成器
-                    SNOWFLAKE_INSTANCE = new SnowflakeIdGenerator(getDatacenterId(), getWorkerId());
-                    log.info("Snowflake 初始化成功 datacenterId={} workerId={}", getDatacenterId(), getWorkerId());
+                    SNOWFLAKE_INSTANCE = SnowflakeIdGenerator.getInstance();
+                    log.info("Snowflake 初始化成功");
                 }
             }
         }
@@ -129,36 +126,5 @@ public final class IdGenerator {
         return SNOWFLAKE_INSTANCE;
     }
 
-    /**
-     * 自动生成 workerId（基于本机 IP 的哈希值）
-     * Snowflake 算法中 workerId 范围通常为 0~31（5 bit，2^5 = 32）
-     */
-    private static long getWorkerId() {
-        try {
-            // 获取当前机器的 IP 地址
-            String ip = InetAddress.getLocalHost().getHostAddress();
-            // 取 IP 字符串的 hash 并通过 0x1F（即 31）进行按位与，确保结果落在 0~31 范围
-            return (ip.hashCode() & 0x1F);
-        } catch (Exception e) {
-            // 若获取 IP 失败，则随机生成一个 workerId（0~31），保证服务可用性
-            return new Random().nextInt(32);
-        }
-    }
-
-    /**
-     * 自动生成 datacenterId（基于本机 Hostname 的哈希值）
-     * datacenterId 范围通常为 0~31（5 bit）
-     */
-    private static long getDatacenterId() {
-        try {
-            // 获取当前机器的主机名
-            String hostname = InetAddress.getLocalHost().getHostName();
-            // 主机名 hash 后，与 0x1F 做 AND，限制在 0~31 范围内
-            return (hostname.hashCode() & 0x1F);
-        } catch (Exception e) {
-            // 若出现异常（如无 hostname），给一个默认的数据中心 ID：1
-            return 1L;
-        }
-    }
 
 }
