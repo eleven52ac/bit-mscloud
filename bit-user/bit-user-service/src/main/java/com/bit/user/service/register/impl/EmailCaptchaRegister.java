@@ -2,7 +2,7 @@ package com.bit.user.service.register.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.bit.common.core.dto.response.ApiResponse;
-import bit.com.user.enums.register.RegisterTypeEnum;
+import com.bit.user.enums.register.RegisterTypeEnum;
 import com.bit.common.utils.core.IdGenerator;
 import com.bit.common.utils.crypto.BCryptUtils;
 import com.bit.common.utils.jwt.JwtUtils;

@@ -1,7 +1,7 @@
 package com.bit.auth.service.impl;
 
-import bit.com.user.api.user.UserInfoApi;
-import bit.com.user.api.user.dto.response.UserInfoResponse;
+import com.bit.user.api.user.UserInfoApi;
+import com.bit.user.api.user.dto.response.UserInfoResponse;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSignerUtil;
@@ -12,8 +12,6 @@ import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.auth.enums.login.LoginTypeEnum;
 import com.bit.common.utils.crypto.BCryptUtils;
 import com.bit.common.web.context.ClientMetaInfo;
-import com.bit.user.api.model.UserInfoEntity;
-import com.bit.user.api.service.UserInfoFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

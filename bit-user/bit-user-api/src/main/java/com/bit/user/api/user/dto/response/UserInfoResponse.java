@@ -1,4 +1,4 @@
-package com.bit.user.api.model;
+package com.bit.user.api.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,17 +12,18 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * 用户信息
- * @TableName user_info
+ * @Datetime: 2025年11月21日14:30
+ * @Author: Eleven52AC
+ * @Description: 用户信息响应类
  */
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoEntity implements Serializable {
+public class UserInfoResponse implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 6381377810326387929L;
+    private static final long serialVersionUID = -5263319968699468976L;
 
     /**
      * 用户ID，唯一标识

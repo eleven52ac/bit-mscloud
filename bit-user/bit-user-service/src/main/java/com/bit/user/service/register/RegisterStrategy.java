@@ -1,7 +1,7 @@
 package com.bit.user.service.register;
 
 import com.bit.common.core.dto.response.ApiResponse;
-import bit.com.user.enums.register.RegisterTypeEnum;
+import com.bit.user.enums.register.RegisterTypeEnum;
 import com.bit.common.web.context.ClientMetaInfo;
 import com.bit.user.controller.user.vo.request.RegisterRequestVo;
 

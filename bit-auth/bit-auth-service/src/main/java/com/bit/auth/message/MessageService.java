@@ -1,6 +1,6 @@
 package com.bit.auth.message;
 
-import bit.com.user.api.user.dto.response.UserInfoResponse;
+import com.bit.user.api.user.dto.response.UserInfoResponse;
 import com.bit.common.utils.ict.EmailSendUtils;
 import com.bit.common.web.context.ClientMetaInfo;
 import lombok.extern.slf4j.Slf4j;

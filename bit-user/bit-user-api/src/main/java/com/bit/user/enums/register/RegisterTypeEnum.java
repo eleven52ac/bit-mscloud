@@ -1,4 +1,4 @@
-package bit.com.user.enums.register;
+package com.bit.user.enums.register;
 
 /**
  * @Datetime: 2025年11月09日17:27

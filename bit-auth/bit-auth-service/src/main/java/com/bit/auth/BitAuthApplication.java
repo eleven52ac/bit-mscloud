@@ -12,7 +12,7 @@ import java.net.InetAddress;
 
 @Slf4j
 @EnableAsync
-@EnableFeignClients(basePackages = "com.bit.user.api.service")
+@EnableFeignClients(basePackages = "com.bit")
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = {"com.bit"})
 public class BitAuthApplication {

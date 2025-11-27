@@ -1,4 +1,4 @@
-package bit.com.user.constant.user;
+package com.bit.user.constant.user;
 
 /**
  * 用户API常量

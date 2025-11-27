@@ -1,4 +1,4 @@
-package bit.com.user.api.user.dto.request;
+package com.bit.user.api.user.dto.request;
 
 import java.io.Serial;
 import java.io.Serializable;

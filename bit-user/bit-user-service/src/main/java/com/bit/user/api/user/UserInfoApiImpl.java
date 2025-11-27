@@ -1,8 +1,7 @@
 package com.bit.user.api.user;
 
-import bit.com.user.api.user.UserInfoApi;
-import bit.com.user.api.user.dto.response.UserInfoResponse;
-import bit.com.user.constant.user.UserApiConstants;
+import com.bit.user.api.user.dto.response.UserInfoResponse;
+import com.bit.user.constant.user.UserApiConstants;
 import cn.hutool.core.bean.BeanUtil;
 import com.bit.common.core.dto.response.ApiResponse;
 import com.bit.user.repository.dataobject.user.UserInfoDo;
