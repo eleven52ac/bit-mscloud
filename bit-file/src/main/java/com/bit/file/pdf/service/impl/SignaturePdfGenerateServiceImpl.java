@@ -1,7 +1,7 @@
 package com.bit.file.pdf.service.impl;
 
+import com.bit.common.core.enums.biz.PdfTypeEnum;
 import com.bit.file.pdf.service.PdfGenerateService;
-import commons.enums.PdfTypeEnum;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

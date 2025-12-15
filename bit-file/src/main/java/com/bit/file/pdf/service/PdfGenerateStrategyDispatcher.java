@@ -1,7 +1,7 @@
 package com.bit.file.pdf.service;
 
 
-import commons.enums.PdfTypeEnum;
+import com.bit.common.core.enums.biz.PdfTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

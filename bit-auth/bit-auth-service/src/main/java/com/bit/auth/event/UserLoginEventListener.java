@@ -1,11 +1,14 @@
 package com.bit.auth.event;
 
+import com.bit.user.api.user.UserLoginHistoryApi;
+import com.bit.user.api.user.dto.request.UserLoginHistoryRequest;
 import com.bit.user.api.user.dto.response.UserInfoResponse;
 import com.bit.auth.config.InternalTokenContext;
 import com.bit.auth.message.MessageService;
 import com.bit.common.web.context.ClientMetaInfo;
 import com.bit.user.api.model.UserLoginHistoryEntity;
 import com.bit.user.api.service.UserLoginHistoryFeignClient;
+import com.bit.user.api.user.dto.response.UserLoginHistoryResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -22,7 +25,7 @@ import java.util.stream.Collectors;
 public class UserLoginEventListener {
 
     @Autowired
-    private UserLoginHistoryFeignClient userLoginHistoryFeignClient;
+    private UserLoginHistoryApi userLoginHistoryApi;
 
     @Autowired
     private MessageService messageService;
@@ -39,11 +42,11 @@ public class UserLoginEventListener {
             UserInfoResponse user = event.getUserInfo();
             ClientMetaInfo info = event.getClientInfo();
             // 查询上一次登录记录
-            List<UserLoginHistoryEntity> lasts = userLoginHistoryFeignClient.recentLoginData(user.getUserId());
+            List<UserLoginHistoryResponse> lasts = userLoginHistoryApi.recentLoginData(user.getUserId());
             // ip
-            Set<String> ips = lasts.stream().map(UserLoginHistoryEntity::getIp).collect(Collectors.toSet());
+            Set<String> ips = lasts.stream().map(UserLoginHistoryResponse::getIp).collect(Collectors.toSet());
             // 登录地
-            Set<String> regions = lasts.stream().map(UserLoginHistoryEntity::getRegion).collect(Collectors.toSet());
+            Set<String> regions = lasts.stream().map(UserLoginHistoryResponse::getRegion).collect(Collectors.toSet());
             boolean suspicious = ips.contains(info.getIp());
             String remark = null;
             if (!suspicious){
@@ -76,18 +79,20 @@ public class UserLoginEventListener {
      * @param remark 备注
      */
     private void saveCurrentLoginRecord(Long userId, ClientMetaInfo info, boolean suspicious, String remark) {
-        UserLoginHistoryEntity record = UserLoginHistoryEntity.builder().build()
-                .setUserId(userId)
-                .setIp(info.getIp())
-                .setRegion(info.getRegion())
-                .setDevice(info.getDevice())
-                .setOs(info.getOs())
-                .setIsp(info.getNetwork())
-                .setLoginTime(LocalDateTime.now())
-                .setIsSuspicious(suspicious ? 1 : 0)
-                .setRemark(remark);
-        userLoginHistoryFeignClient.saveCurrentLoginRecord(record);
+        UserLoginHistoryRequest record = UserLoginHistoryRequest.builder()
+                .userId(userId)
+                .ip(info.getIp())
+                .region(info.getRegion())
+                .device(info.getDevice())
+                .os(info.getOs())
+                .isp(info.getNetwork())
+                .loginTime(LocalDateTime.now())
+                .isSuspicious(suspicious ? 1 : 0)
+                .remark(remark)
+                .build();
+        userLoginHistoryApi.saveCurrentLoginRecord(record);
     }
+
 
 
 }

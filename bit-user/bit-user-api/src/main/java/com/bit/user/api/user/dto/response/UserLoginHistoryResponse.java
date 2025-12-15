@@ -1,13 +1,11 @@
-package com.bit.user.api.user.dto.request;
+package com.bit.user.api.user.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Datetime: 2025年11月20日14:14
@@ -15,12 +13,11 @@ import java.time.LocalDateTime;
  * @Description: 用户登录记录请求参数
  */
 @Data
-@Builder
-public class UserLoginHistoryRequest implements Serializable {
+public class UserLoginHistoryResponse implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 98337738233131143L;
-
+    
     /**
      * 主键
      */
