@@ -19,6 +19,7 @@
         <module>bit-seckill</module>
         <module>bit-other</module>
         <module>bit-user</module>
+        <module>bit-rpc</module>
     </modules>
     <!-- 统一管理jar包版本 -->
     <properties>
@@ -427,6 +428,13 @@
             <dependency>
                 <groupId>bit</groupId>
                 <artifactId>bit-auth-api</artifactId>
+                <version>${bit.mscloud.version}</version>
+            </dependency>
+
+            <!-- bit-rpc -->
+            <dependency>
+                <groupId>bit</groupId>
+                <artifactId>bit-rpc</artifactId>
                 <version>${bit.mscloud.version}</version>
             </dependency>
 
