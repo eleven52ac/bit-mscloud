@@ -16,6 +16,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <optional>true</optional>
             <scope>provided</scope>
         </dependency>
 
@@ -31,5 +32,6 @@
             <artifactId>vertx-core</artifactId>
             <version>4.5.1</version>
         </dependency>
+
     </dependencies>
 </project>

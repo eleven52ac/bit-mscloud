@@ -4,6 +4,8 @@ import com.bit.rpc.core.config.RpcConfig;
 import com.bit.rpc.core.constant.RpcConstant;
 import com.bit.rpc.core.utils.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.logging.Logger;
 
@@ -17,7 +19,7 @@ public class RpcApplication {
 
     private static volatile RpcConfig rpcConfig;
 
-    //protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+//    private static final Logger log = LoggerFactory.getLogger(RpcApplication.class);
 
 
     /**
