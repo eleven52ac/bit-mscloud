@@ -4,10 +4,7 @@ import com.bit.rpc.core.config.RpcConfig;
 import com.bit.rpc.core.constant.RpcConstant;
 import com.bit.rpc.core.utils.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
 
 /**
  * @Datetime: 2026年01月14日14:53
@@ -19,15 +16,13 @@ public class RpcApplication {
 
     private static volatile RpcConfig rpcConfig;
 
-//    private static final Logger log = LoggerFactory.getLogger(RpcApplication.class);
-
 
     /**
      * 框架初始化，支持传入自定义配置
      *
      * @param newRpcConfig
      */
-    public static void init(RpcConfig newRpcConfig) {
+    private static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("rpc init, config = {}", newRpcConfig.toString());
     }
@@ -35,7 +30,7 @@ public class RpcApplication {
     /**
      * 初始化
      */
-    public static void init() {
+    private static void init() {
         RpcConfig newRpcConfig;
         try {
             newRpcConfig = ConfigUtils.loadConfig(RpcConfig.class, RpcConstant.DEFAULT_CONFIG_FILE_PREFIX);

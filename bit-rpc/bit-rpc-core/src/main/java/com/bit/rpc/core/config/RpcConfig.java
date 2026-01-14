@@ -2,6 +2,8 @@ package com.bit.rpc.core.config;
 
 import lombok.Data;
 
+import javax.imageio.stream.IIOByteBuffer;
+
 /**
  * @Datetime: 2026年01月14日14:43
  * @Author: Eleven52AC
@@ -29,4 +31,9 @@ public class RpcConfig {
      * 服务器端口号
      */
     private int serverPort;
+
+    /**
+     * 是否开启模拟
+     */
+    private boolean isMock;
 }
