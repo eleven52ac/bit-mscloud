@@ -139,8 +139,10 @@ public class IdGeneratorTest {
                     IdGenerator.nextId();
                 }
                 latch.countDown();
+
             });
         }
+
         latch.await();
         long end = System.currentTimeMillis();
         double qps = total * 1000.0 / (end - start);
@@ -148,5 +150,18 @@ public class IdGeneratorTest {
         System.out.println("耗时=" + (end - start) + " ms");
         System.out.println("QPS=" + String.format("%.0f", qps));
     }
+
+    @Test
+    public void testNextIdSingleThread() {
+        long start = System.currentTimeMillis();
+        int total = 10_000_000;
+        for (int i = 0; i < total; i++) {
+            IdGenerator.nextId();
+        }
+        long end = System.currentTimeMillis();
+        double qps = total * 1000.0 / (end - start);
+        System.out.println("单线程生成 " + total + " 个 ID 耗时: " + (end - start) + " ms, QPS=" + String.format("%.0f", qps));
+    }
+
 
 }
