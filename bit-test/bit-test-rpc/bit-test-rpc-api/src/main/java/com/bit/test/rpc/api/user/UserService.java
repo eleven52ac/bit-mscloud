@@ -3,11 +3,9 @@ package com.bit.test.rpc.api.user;
 import com.bit.test.rpc.api.user.model.User;
 
 /**
- * 用户服务
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @learn <a href="https://codefather.cn">编程宝典</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * 用户服务接口
+ * @Datetime: 2026年02月02日02:56
+ * @Author: Eleven52AC
  */
 public interface UserService {
 
@@ -27,4 +25,5 @@ public interface UserService {
     default short getNumber() {
         return 1;
     }
+
 }
